@@ -21,6 +21,9 @@ class PasswordEncoderSubscriber implements EventSubscriberInterface
         $this->encoder = $encoder;
     }
 
+    /**
+     * @return array[]
+     */
     public static function getSubscribedEvents()
     {
         return [
@@ -28,6 +31,11 @@ class PasswordEncoderSubscriber implements EventSubscriberInterface
         ];
     }
 
+    /**
+     * @param ViewEvent $event
+     * Take event and request
+     * verify method POST and if is a user object
+     */
     public function encodePassword(ViewEvent $event)
     {
         $result = $event->getControllerResult();
