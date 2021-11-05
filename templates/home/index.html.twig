@@ -3,222 +3,152 @@
 {% block title %}Hello HomeController!{% endblock %}
 
 {% block body %}
-<!DOCTYPE html>
-<html lang="en">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>FOI App Landing Page</title>
-    <link rel="stylesheet" href="assets/vendors/fontawesome-free/css/all.min.css">
-    <link rel="stylesheet" href="assets/css/style.css">
-</head>
-
-<body>
-    <header class="foi-header landing-header">
-        <div class="container">
-            <nav class="navbar navbar-expand-lg navbar-light foi-navbar">
-                <a class="navbar-brand" href="index.html">
-                    <img src="assets/images/logo.svg" alt="FOI">
-                </a>
-                <button class="navbar-toggler d-lg-none" type="button" data-toggle="collapse" data-target="#collapsibleNavId" aria-controls="collapsibleNavId" aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
+    <!-- Navigation-->
+    <nav class="navbar navbar-expand-lg navbar-light fixed-top shadow-sm" id="mainNav">
+        <div class="container px-5">
+            <a class="navbar-brand fw-bold" href="#page-top">Start Bootstrap</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+                Menu
+                <i class="bi-list"></i>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarResponsive">
+                <ul class="navbar-nav ms-auto me-4 my-3 my-lg-0">
+                    <li class="nav-item"><a class="nav-link me-lg-3" href="#features">Features</a></li>
+                    <li class="nav-item"><a class="nav-link me-lg-3" href="#download">Download</a></li>
+                </ul>
+                <button class="btn btn-primary rounded-pill px-3 mb-2 mb-lg-0" data-bs-toggle="modal" data-bs-target="#feedbackModal">
+                        <span class="d-flex align-items-center">
+                            <i class="bi-chat-text-fill me-2"></i>
+                            <span class="small">Send Feedback</span>
+                        </span>
                 </button>
-                <div class="collapse navbar-collapse" id="collapsibleNavId">
-                    <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
-                        <li class="nav-item active">
-                            <a class="nav-link" href="index.html">Home <span class="sr-only">(current)</span></a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="about.html">About</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="features.html">Features</a>
-                        </li>
-                        <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle" href="#" id="pagesMenu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Pages</a>
-                            <div class="dropdown-menu" aria-labelledby="pagesMenu">
-                                <a class="dropdown-item" href="blog.html">Blog</a>
-                                <a class="dropdown-item" href="login.html">Login</a>
-                                <a class="dropdown-item" href="register.html">Register</a>
-                                <a class="dropdown-item" href="faq.html">FAQ</a>
-                                <a class="dropdown-item" href="404.html">404</a>
-                                <a class="dropdown-item" href="careers.html">Careers</a>
-                                <a class="dropdown-item" href="blog-single.html">Single blog</a>
-                                <a class="dropdown-item" href="privacy-policy.html">Privacy policy</a>
-                            </div>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="contact.html">contact</a>
-                        </li>
-                    </ul>
-                    <ul class="navbar-nav mt-2 mt-lg-0">
-                        <li class="nav-item mr-2 mb-3 mb-lg-0">
-                            <a class="btn btn-secondary" href="register.html">Sign up</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="btn btn-secondary" href="login.html">Login</a>
-                        </li>
-                    </ul>
-                </div>
-            </nav>
-            <div class="header-content">
-                <div class="row">
-                    <div class="col-md-6">
-                        <h1>Great app that makes your life awesome</h1>
-                        <p class="text-dark">He has led a remarkable campaign, defying the traditional mainstream parties courtesy of his En Marche! movement.</p>
-                        <button class="btn btn-primary mb-4">Get Started</button>
-                        <div class="my-2">
-                            <p class="header-app-download-title">GET OUR MOBILE APP</p>
-                        </div>
-                        <div>
-                            <button class="btn btn-app-download mr-2"><img src="assets/images/ios.svg" alt="App store"></button>
-                            <button class="btn btn-app-download"><img src="assets/images/android.svg" alt="play store"></button>
+            </div>
+        </div>
+    </nav>
+    <!-- Mashead header-->
+    <header class="masthead">
+        <div class="container px-5">
+            <div class="row gx-5 align-items-center">
+                <div class="col-lg-6">
+                    <!-- Mashead text and app badges-->
+                    <div class="mb-5 mb-lg-0 text-center text-lg-start">
+                        <h1 class="display-1 lh-1 mb-3">Showcase your app beautifully.</h1>
+                        <p class="lead fw-normal text-muted mb-5">Launch your mobile app landing page faster with this free, open source theme from Start Bootstrap!</p>
+                        <div class="d-flex flex-column flex-lg-row align-items-center">
+                            <a class="me-lg-3 mb-4 mb-lg-0" href="#!"><img class="app-badge" src="assets/img/google-play-badge.svg" alt="..." /></a>
+                            <a href="#!"><img class="app-badge" src="assets/img/app-store-badge.svg" alt="..." /></a>
                         </div>
                     </div>
-                    <div class="col-md-6">
-                        <img src="assets/images/app_1.png" alt="app" width="388px" class="img-fluid">
+                </div>
+                <div class="col-lg-6">
+                    <!-- Masthead device mockup feature-->
+                    <div class="masthead-device-mockup">
+                        <svg class="circle" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+                            <defs>
+                                <linearGradient id="circleGradient" gradientTransform="rotate(45)">
+                                    <stop class="gradient-start-color" offset="0%"></stop>
+                                    <stop class="gradient-end-color" offset="100%"></stop>
+                                </linearGradient>
+                            </defs>
+                            <circle cx="50" cy="50" r="50"></circle></svg
+                        ><svg class="shape-1 d-none d-sm-block" viewBox="0 0 240.83 240.83" xmlns="http://www.w3.org/2000/svg">
+                            <rect x="-32.54" y="78.39" width="305.92" height="84.05" rx="42.03" transform="translate(120.42 -49.88) rotate(45)"></rect>
+                            <rect x="-32.54" y="78.39" width="305.92" height="84.05" rx="42.03" transform="translate(-49.88 120.42) rotate(-45)"></rect></svg
+                        ><svg class="shape-2 d-none d-sm-block" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><circle cx="50" cy="50" r="50"></circle></svg>
+                        <div class="device-wrapper">
+                            <div class="device" data-device="iPhoneX" data-orientation="portrait" data-color="black">
+                                <div class="screen bg-black">
+                                    <!-- PUT CONTENTS HERE:-->
+                                    <!-- * * This can be a video, image, or just about anything else.-->
+                                    <!-- * * Set the max width of your media to 100% and the height to-->
+                                    <!-- * * 100% like the demo example below.-->
+                                    <video muted="muted" autoplay="" loop="" style="max-width: 100%; height: 100%"><source src="assets/img/demo-screen.mp4" type="video/mp4" /></video>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
     </header>
-    <section class="py-5 mb-5">
-        <div class="container">
-            <h2 class="section-title">Application Features</h2>
-            <div class="row">
-                <div class="col-lg-4 mb-4 mb-lg-0">
-                    <h5>Secure Data</h5>
-                    <p class="text-dark">No matter what kind of home you have to share, you can increase your earnings.</p>
-                    <p class="mb-5"><a href="#!" class="text-primary mb-5">Find out More</a></p>
-                    <h5>Fully functional</h5>
-                    <p class="text-dark">No matter what kind of home you have to share, you can increase your earnings.</p>
-                    <p class="mb-5"><a href="#!" class="text-primary mb-5">Find out More</a></p>
-                </div>
-                <div class="col-lg-4 mb-3 mb-lg-0">
-                    <h5>Live Chat</h5>
-                    <p class="text-dark">No matter what kind of home you have to share, you can increase your earnings.</p>
-                    <p class="mb-5"><a href="#!" class="text-primary mb-5">Find out More</a></p>
-                    <h5>Powerful dashboard</h5>
-                    <p class="text-dark">No matter what kind of home you have to share, you can increase your earnings.</p>
-                    <p class="mb-5"><a href="#!" class="text-primary mb-5">Find out More</a></p>
-                </div>
-                <div class="col-lg-4">
-                    <h6 class="text-gray font-os font-weight-semibold">Trusted by the world's best</h6>
-                    <div id="landingClientCarousel" class="carousel slide landing-client-carousel" data-ride="carousel">
-                        <div class="carousel-inner" role="listbox">
-                            <div class="carousel-item active">
-                                <div class="d-flex flex-wrap justify-content-center">
-                                    <div class="clients-logo">
-                                        <img src="assets/images/clients/slack.svg" alt="Slack" class="img-fluid">
-                                    </div>
-                                    <div class="clients-logo">
-                                        <img src="assets/images/clients/spotify.svg" alt="Spotify" class="img-fluid">
-                                    </div>
-                                    <div class="clients-logo">
-                                        <img src="assets/images/clients/paypal.svg" alt="Paypal" class="img-fluid">
-                                    </div>
-                                    <div class="clients-logo">
-                                        <img src="assets/images/clients/amazon.svg" alt="Amazon" class="img-fluid">
-                                    </div>
-                                    <div class="clients-logo">
-                                        <img src="assets/images/clients/google.svg" alt="Google" class="img-fluid">
-                                    </div>
-                                    <div class="clients-logo">
-                                        <img src="assets/images/clients/samsung.svg" alt="Samsung" class="img-fluid">
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="carousel-item">
-                                <div class="d-flex flex-wrap justify-content-center">
-                                    <div class="clients-logo">
-                                        <img src="assets/images/clients/slack.svg" alt="Slack" class="img-fluid">
-                                    </div>
-                                    <div class="clients-logo">
-                                        <img src="assets/images/clients/spotify.svg" alt="Spotify" class="img-fluid">
-                                    </div>
-                                    <div class="clients-logo">
-                                        <img src="assets/images/clients/paypal.svg" alt="Paypal" class="img-fluid">
-                                    </div>
-                                    <div class="clients-logo">
-                                        <img src="assets/images/clients/amazon.svg" alt="Amazon" class="img-fluid">
-                                    </div>
-                                    <div class="clients-logo">
-                                        <img src="assets/images/clients/google.svg" alt="Google" class="img-fluid">
-                                    </div>
-                                    <div class="clients-logo">
-                                        <img src="assets/images/clients/samsung.svg" alt="Samsung" class="img-fluid">
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="carousel-item">
-                                <div class="d-flex flex-wrap justify-content-center">
-                                    <div class="clients-logo">
-                                        <img src="assets/images/clients/slack.svg" alt="Slack" class="img-fluid">
-                                    </div>
-                                    <div class="clients-logo">
-                                        <img src="assets/images/clients/spotify.svg" alt="Spotify" class="img-fluid">
-                                    </div>
-                                    <div class="clients-logo">
-                                        <img src="assets/images/clients/paypal.svg" alt="Paypal" class="img-fluid">
-                                    </div>
-                                    <div class="clients-logo">
-                                        <img src="assets/images/clients/amazon.svg" alt="Amazon" class="img-fluid">
-                                    </div>
-                                    <div class="clients-logo">
-                                        <img src="assets/images/clients/google.svg" alt="Google" class="img-fluid">
-                                    </div>
-                                    <div class="clients-logo">
-                                        <img src="assets/images/clients/samsung.svg" alt="Samsung" class="img-fluid">
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <ol class="carousel-indicators">
-                            <li data-target="#landingClientCarousel" data-slide-to="0" class="active"></li>
-                            <li data-target="#landingClientCarousel" data-slide-to="1"></li>
-                            <li data-target="#landingClientCarousel" data-slide-to="2"></li>
-                        </ol>
-                    </div>
+    <!-- Quote/testimonial aside-->
+    <aside class="text-center bg-gradient-primary-to-secondary">
+        <div class="container px-5">
+            <div class="row gx-5 justify-content-center">
+                <div class="col-xl-8">
+                    <div class="h2 fs-1 text-white mb-4">"An intuitive solution to a common problem that we all face, wrapped up in a single app!"</div>
+                    <img src="assets/img/tnw-logo.svg" alt="..." style="height: 3rem" />
                 </div>
             </div>
         </div>
-    </section>
-    <section class="py-5 mb-5">
-        <div class="container">
-            <div class="row">
-                <div class="col-md-6 mb-5 mb-md-0">
-                    <img src="assets/images/app_2.png" alt="special offers" class="img-fluid" width="492px">
+    </aside>
+    <!-- App features section-->
+    <section id="features">
+        <div class="container px-5">
+            <div class="row gx-5 align-items-center">
+                <div class="col-lg-8 order-lg-1 mb-5 mb-lg-0">
+                    <div class="container-fluid px-5">
+                        <div class="row gx-5">
+                            <div class="col-md-6 mb-5">
+                                <!-- Feature item-->
+                                <div class="text-center">
+                                    <i class="bi-phone icon-feature text-gradient d-block mb-3"></i>
+                                    <h3 class="font-alt">Device Mockups</h3>
+                                    <p class="text-muted mb-0">Ready to use HTML/CSS device mockups, no Photoshop required!</p>
+                                </div>
+                            </div>
+                            <div class="col-md-6 mb-5">
+                                <!-- Feature item-->
+                                <div class="text-center">
+                                    <i class="bi-camera icon-feature text-gradient d-block mb-3"></i>
+                                    <h3 class="font-alt">Flexible Use</h3>
+                                    <p class="text-muted mb-0">Put an image, video, animation, or anything else in the screen!</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6 mb-5 mb-md-0">
+                                <!-- Feature item-->
+                                <div class="text-center">
+                                    <i class="bi-gift icon-feature text-gradient d-block mb-3"></i>
+                                    <h3 class="font-alt">Free to Use</h3>
+                                    <p class="text-muted mb-0">As always, this theme is free to download and use for any purpose!</p>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <!-- Feature item-->
+                                <div class="text-center">
+                                    <i class="bi-patch-check icon-feature text-gradient d-block mb-3"></i>
+                                    <h3 class="font-alt">Open Source</h3>
+                                    <p class="text-muted mb-0">Since this theme is MIT licensed, you can use it commercially!</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-                <div class="col-md-6">
-                    <h2 class="section-title">Get special offers on the things you love</h2>
-                    <p class="mb-5">He has led a remarkable campaign, defying the traditional mainstream parties courtesy of his En Marche! movement. For many, however, the campaign has become less about backing Macron and instead about voting against Le Pen, the National Front candidate.</p>
-                    <div class="row">
-                        <div class="col-md-6 mb-3">
-                            <div class="media landing-feature">
-                                <span class="landing-feature-icon"></span>
-                                <div class="media-body">
-                                    <h5>Essentials</h5>
-                                    <p>All the basics for businesses that are just getting started.</p>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-6 mb-3">
-                            <div class="media landing-feature">
-                                <span class="landing-feature-icon"></span>
-                                <div class="media-body">
-                                    <h5>Premium</h5>
-                                    <p>All the basics for businesses that are just getting started.</p>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-6 mb-3">
-                            <div class="media landing-feature">
-                                <span class="landing-feature-icon"></span>
-                                <div class="media-body">
-                                    <h5>Standard</h5>
-                                    <p>All the basics for businesses that are just getting started.</p>
+                <div class="col-lg-4 order-lg-0">
+                    <!-- Features section device mockup-->
+                    <div class="features-device-mockup">
+                        <svg class="circle" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+                            <defs>
+                                <linearGradient id="circleGradient" gradientTransform="rotate(45)">
+                                    <stop class="gradient-start-color" offset="0%"></stop>
+                                    <stop class="gradient-end-color" offset="100%"></stop>
+                                </linearGradient>
+                            </defs>
+                            <circle cx="50" cy="50" r="50"></circle></svg
+                        ><svg class="shape-1 d-none d-sm-block" viewBox="0 0 240.83 240.83" xmlns="http://www.w3.org/2000/svg">
+                            <rect x="-32.54" y="78.39" width="305.92" height="84.05" rx="42.03" transform="translate(120.42 -49.88) rotate(45)"></rect>
+                            <rect x="-32.54" y="78.39" width="305.92" height="84.05" rx="42.03" transform="translate(-49.88 120.42) rotate(-45)"></rect></svg
+                        ><svg class="shape-2 d-none d-sm-block" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><circle cx="50" cy="50" r="50"></circle></svg>
+                        <div class="device-wrapper">
+                            <div class="device" data-device="iPhoneX" data-orientation="portrait" data-color="black">
+                                <div class="screen bg-black">
+                                    <!-- PUT CONTENTS HERE:-->
+                                    <!-- * * This can be a video, image, or just about anything else.-->
+                                    <!-- * * Set the max width of your media to 100% and the height to-->
+                                    <!-- * * 100% like the demo example below.-->
+                                    <video muted="muted" autoplay="" loop="" style="max-width: 100%; height: 100%"><source src="assets/img/demo-screen.mp4" type="video/mp4" /></video>
                                 </div>
                             </div>
                         </div>
@@ -227,276 +157,120 @@
             </div>
         </div>
     </section>
-    <section class="py-5 mb-5">
-        <div class="container">
-            <h2>Choose the plan that’s right for yor business</h2>
-            <p class="text-muted mb-5">Thank you for your very professional and prompt response. I wished I had found you before </p>
-            <div class="row">
-                <div class="col-lg-4 mb-4">
-                    <div class="card pricing-card border-warning">
-                        <div class="card-body">
-                            <h3 class="mb-1">Starter</h3>
-                            <h3 class="mb-1 text-warning">Free</h3>
-                            <p class="payment-period">Per month</p>
-                            <p class="mb-4">Thank you for your very professional and prompt response.</p>
-                            <button class="btn btn-outline-warning btn-rounded">Get Started</button>
-                        </div>
-                    </div>
+    <!-- Basic features section-->
+    <section class="bg-light">
+        <div class="container px-5">
+            <div class="row gx-5 align-items-center justify-content-center justify-content-lg-between">
+                <div class="col-12 col-lg-5">
+                    <h2 class="display-4 lh-1 mb-4">Enter a new age of web design</h2>
+                    <p class="lead fw-normal text-muted mb-5 mb-lg-0">This section is perfect for featuring some information about your application, why it was built, the problem it solves, or anything else! There's plenty of space for text here, so don't worry about writing too much.</p>
                 </div>
-                <div class="col-lg-4 mb-4">
-                    <div class="card pricing-card border-primary active">
-                        <div class="card-body">
-                            <h3>Popular</h3>
-                            <h3 class="text-primary">$23.00</h3>
-                            <p class="payment-period">Per month</p>
-                            <p class="mb-4">Thank you for your very professional and prompt response.</p>
-                            <button class="btn btn-primary btn-rounded">Get Started</button>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-4 mb-4">
-                    <div class="card pricing-card border-success">
-                        <div class="card-body">
-                            <h3>Enterprise</h3>
-                            <h3 class="text-success">$40.00</h3>
-                            <p class="payment-period">Per month</p>
-                            <p class="mb-4">Thank you for your very professional and prompt response.</p>
-                            <button class="btn btn-outline-success btn-rounded">Get Started</button>
-                        </div>
-                    </div>
+                <div class="col-sm-8 col-md-6">
+                    <div class="px-5 px-sm-0"><img class="img-fluid rounded-circle" src="https://source.unsplash.com/u8Jn2rzYIps/900x900" alt="..." /></div>
                 </div>
             </div>
         </div>
     </section>
-    <section class="py-5 mb-5">
-        <div class="container">
-            <h2>Satisfied Users</h2>
-            <p class="text-muted mb-5">Thank you for your very professional and prompt response. I wished I had found you before </p>
-            <div class="row">
-                <div class="col-md-4 foi-review mb-5 mb-md-0">
-                    <div class="foi-rating">
-                        <span class="fas fa-star checked"></span>
-                        <span class="fas fa-star checked"></span>
-                        <span class="fas fa-star checked"></span>
-                        <span class="fas fa-star checked"></span>
-                        <span class="fas fa-star checked"></span>
-                    </div>
-                    <h5 class="foi-review-heading">Great support available</h5>
-                    <p class="foi-review-content">Thank you for your very professional and prompt response. I wished I had found you before I spent money on a competitors theme.</p>
-                    <div class="media foi-review-user">
-                        <img src="assets/images/avatar/avatar_11.jpg" alt="user" class="avatar">
-                        <div class="media-body">
-                            <h6 class="mb-0">Amarachi Nkechi</h6>
-                            <p>UX Designer</p>
-                        </div>
-                    </div>
-
-                </div>
-                <div class="col-md-4 foi-review mb-5 mb-md-0">
-                    <div class="foi-rating">
-                        <span class="fas fa-star checked"></span>
-                        <span class="fas fa-star checked"></span>
-                        <span class="fas fa-star checked"></span>
-                        <span class="fas fa-star checked"></span>
-                        <span class="fas fa-star checked"></span>
-                    </div>
-                    <h5 class="foi-review-heading">Great support available</h5>
-                    <p class="foi-review-content">Thank you for your very professional and prompt response. I wished I had found you before I spent money on a competitors theme.</p>
-                    <div class="media foi-review-user">
-                        <img src="assets/images/avatar/avatar_12.jpg" alt="user" class="avatar">
-                        <div class="media-body">
-                            <h6 class="mb-0">Margje Jutten</h6>
-                            <p>Developer</p>
-                        </div>
-                    </div>
-
-                </div>
-                <div class="col-md-4 foi-review mb-5 mb-md-0">
-                    <div class="foi-rating">
-                        <span class="fas fa-star checked"></span>
-                        <span class="fas fa-star checked"></span>
-                        <span class="fas fa-star checked"></span>
-                        <span class="fas fa-star checked"></span>
-                        <span class="fas fa-star checked"></span>
-                    </div>
-                    <h5 class="foi-review-heading">Great support available</h5>
-                    <p class="foi-review-content">Thank you for your very professional and prompt response. I wished I had found you before I spent money on a competitors theme.</p>
-                    <div class="media foi-review-user">
-                        <img src="assets/images/avatar/avatar_13.jpg" alt="user" class="avatar">
-                        <div class="media-body">
-                            <h6 class="mb-0">Monica Böttger</h6>
-                            <p>UX Designer</p>
-                        </div>
-                    </div>
-
-                </div>
+    <!-- Call to action section-->
+    <section class="cta">
+        <div class="cta-content">
+            <div class="container px-5">
+                <h2 class="text-white display-1 lh-1 mb-4">
+                    Stop waiting.
+                    <br />
+                    Start building.
+                </h2>
+                <a class="btn btn-outline-light py-3 px-4 rounded-pill" href="https://startbootstrap.com/theme/new-age" target="_blank">Download for free</a>
             </div>
         </div>
     </section>
-    <section class="py-5 mb-5">
-        <div class="container">
-            <h2>FAQ</h2>
-            <p class="section-subtitle">Frequently Asked Questions</p>
-            <div class="row">
-                <div class="col-lg-6">
-                    <div class="card mb-3 landing-faq-card">
-                        <div class="card-header bg-white" id="faqOneTitle">
-                            <a href="#faqOneCollapse" class="d-flex align-items-center" data-toggle="collapse">
-                                <h6 class="mb-0">What is Foi app?</h6> <i class="far fa-plus-square ml-auto"></i>
-                            </a>
-                        </div>
-                        <div id="faqOneCollapse" class="collapse" aria-labelledby="faqOneTitle">
-                            <div class="card-body">
-                                <p class="mb-0 text-gray">Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.</p>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="card mb-3 landing-faq-card">
-                        <div class="card-header bg-white" id="faqTwoTitle">
-                            <a href="#faqTwoCollapse" class="d-flex align-items-center" data-toggle="collapse">
-                                <h6 class="mb-0">Why should I use Foi app?</h6> <i class="far fa-plus-square ml-auto"></i>
-                            </a>
-                        </div>
-                        <div id="faqTwoCollapse" class="collapse" aria-labelledby="faqTwoTitle">
-                            <div class="card-body">
-                                <p class="mb-0 text-gray">Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.</p>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="card mb-3 landing-faq-card">
-                        <div class="card-header bg-white" id="faqThreeTitle">
-                            <a href="#faqThreeCollapse" class="d-flex align-items-center" data-toggle="collapse">
-                                <h6 class="mb-0">How can I use Foi app?</h6> <i class="far fa-plus-square ml-auto"></i>
-                            </a>
-                        </div>
-                        <div id="faqThreeCollapse" class="collapse" aria-labelledby="faqThreeTitle">
-                            <div class="card-body">
-                                <p class="mb-0 text-gray">Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-6">
-                    <div class="card mb-3 landing-faq-card">
-                        <div class="card-header bg-white" id="faqFourTitle">
-                            <a href="#faqFourCollapse" class="d-flex align-items-center" data-toggle="collapse">
-                                <h6 class="mb-0">Who will see my updates?</h6> <i class="far fa-plus-square ml-auto"></i>
-                            </a>
-                        </div>
-                        <div id="faqFourCollapse" class="collapse" aria-labelledby="faqFourTitle">
-                            <div class="card-body">
-                                <p class="mb-0 text-gray">Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.</p>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="card mb-3 landing-faq-card">
-                        <div class="card-header bg-white" id="faqFiveTitle">
-                            <a href="#faqFiveCollapse" class="d-flex align-items-center" data-toggle="collapse">
-                                <h6 class="mb-0">Can people see my connections?</h6> <i class="far fa-plus-square ml-auto"></i>
-                            </a>
-                        </div>
-                        <div id="faqFiveCollapse" class="collapse" aria-labelledby="faqFiveTitle">
-                            <div class="card-body">
-                                <p class="mb-0 text-gray">Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.</p>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="card mb-3 landing-faq-card">
-                        <div class="card-header bg-white" id="faqSixTitle">
-                            <a href="#faqSixCollapse" class="d-flex align-items-center" data-toggle="collapse">
-                                <h6 class="mb-0">Being a user, what all rights I have?</h6> <i class="far fa-plus-square ml-auto"></i>
-                            </a>
-                        </div>
-                        <div id="faqSixCollapse" class="collapse" aria-labelledby="faqSixTitle">
-                            <div class="card-body">
-                                <p class="mb-0 text-gray">Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+    <!-- App badge section-->
+    <section class="bg-gradient-primary-to-secondary" id="download">
+        <div class="container px-5">
+            <h2 class="text-center text-white font-alt mb-4">Get the app now!</h2>
+            <div class="d-flex flex-column flex-lg-row align-items-center justify-content-center">
+                <a class="me-lg-3 mb-4 mb-lg-0" href="#!"><img class="app-badge" src="assets/img/google-play-badge.svg" alt="..." /></a>
+                <a href="#!"><img class="app-badge" src="assets/img/app-store-badge.svg" alt="..." /></a>
             </div>
         </div>
     </section>
-    <footer class="foi-footer text-white">
-        <div class="container">
-            <div class="row footer-content">
-                <div class="col-xl-6 col-lg-7 col-md-8">
-                    <h2 class="mb-0">Do you want to know more or just have a question? write to us.</h2>
-                </div>
-                <div class="col-md-4 col-lg-5 col-xl-6 py-3 py-md-0 d-md-flex align-items-center justify-content-end">
-                    <a href="contact.html" class="btn btn-danger btn-lg">Contact form</a>
-                </div>
-            </div>
-            <div class="row footer-widget-area">
-                <div class="col-md-3">
-                    <div class="py-3">
-                        <img src="assets/images/logo-white.svg" alt="FOI">
-                    </div>
-                    <p class="font-os font-weight-semibold mb3">Get our mobile app</p>
-                    <div>
-                        <button class="btn btn-app-download mr-2"><img src="assets/images/ios.svg" alt="App store"></button>
-                        <button class="btn btn-app-download"><img src="assets/images/android.svg" alt="play store"></button>
-                    </div>
-                </div>
-                <div class="col-md-3 mt-3 mt-md-0">
-                    <nav>
-                        <ul class="nav flex-column">
-                            <li class="nav-item">
-                                <a href="#!" class="nav-link">Account</a>
-                            </li>
-                            <li class="nav-item">
-                                <a href="#!" class="nav-link">My tasks</a>
-                            </li>
-                            <li class="nav-item">
-                                <a href="#!" class="nav-link">Projects</a>
-                            </li>
-                            <li class="nav-item">
-                                <a href="#!" class="nav-link">Edit profile</a>
-                            </li>
-                            <li class="nav-item">
-                                <a href="#!" class="nav-link">Activity</a>
-                            </li>
-                        </ul>
-                    </nav>
-                </div>
-                <div class="col-md-3 mt-3 mt-md-0">
-                    <nav>
-                        <ul class="nav flex-column">
-                            <li class="nav-item">
-                                <a href="#!" class="nav-link">About</a>
-                            </li>
-                            <li class="nav-item">
-                                <a href="#!" class="nav-link">Services</a>
-                            </li>
-                            <li class="nav-item">
-                                <a href="#!" class="nav-link">Careers <span class="badge badge-pill badge-secondary ml-3">Hiring</span></a>
-                            </li>
-                            <li class="nav-item">
-                                <a href="#!" class="nav-link">Blog</a>
-                            </li>
-                            <li class="nav-item">
-                                <a href="#!" class="nav-link">Shop with us</a>
-                            </li>
-                        </ul>
-                    </nav>
-                </div>
-                <div class="col-md-3 mt-3 mt-md-0">
-                    <p>
-                        &copy; foi. 2020 <a href="https://www.bootstrapdash.com" target="_blank" rel="noopener noreferrer" class="text-reset">BootstrapDash</a>.
-                    </p>
-                    <p>All rights reserved.</p>
-                    <nav class="social-menu">
-                        <a href="#!"><img src="assets/images/facebook.svg" alt="facebook"></a>
-                        <a href="#!"><img src="assets/images/instagram.svg" alt="instagram"></a>
-                        <a href="#!"><img src="assets/images/twitter.svg" alt="twitter"></a>
-                        <a href="#!"><img src="assets/images/youtube.svg" alt="youtube"></a>
-                    </nav>
-                </div>
+    <!-- Footer-->
+    <footer class="bg-black text-center py-5">
+        <div class="container px-5">
+            <div class="text-white-50 small">
+                <div class="mb-2">&copy; Your Website 2021. All Rights Reserved.</div>
+                <a href="#!">Privacy</a>
+                <span class="mx-1">&middot;</span>
+                <a href="#!">Terms</a>
+                <span class="mx-1">&middot;</span>
+                <a href="#!">FAQ</a>
             </div>
         </div>
     </footer>
-
-</body>
-
-</html>
+    <!-- Feedback Modal-->
+    <div class="modal fade" id="feedbackModal" tabindex="-1" aria-labelledby="feedbackModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header bg-gradient-primary-to-secondary p-4">
+                    <h5 class="modal-title font-alt text-white" id="feedbackModalLabel">Send feedback</h5>
+                    <button class="btn-close btn-close-white" type="button" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body border-0 p-4">
+                    <!-- * * * * * * * * * * * * * * *-->
+                    <!-- * * SB Forms Contact Form * *-->
+                    <!-- * * * * * * * * * * * * * * *-->
+                    <!-- This form is pre-integrated with SB Forms.-->
+                    <!-- To make this form functional, sign up at-->
+                    <!-- https://startbootstrap.com/solution/contact-forms-->
+                    <!-- to get an API token!-->
+                    <form id="contactForm" data-sb-form-api-token="API_TOKEN">
+                        <!-- Name input-->
+                        <div class="form-floating mb-3">
+                            <input class="form-control" id="name" type="text" placeholder="Enter your name..." data-sb-validations="required" />
+                            <label for="name">Full name</label>
+                            <div class="invalid-feedback" data-sb-feedback="name:required">A name is required.</div>
+                        </div>
+                        <!-- Email address input-->
+                        <div class="form-floating mb-3">
+                            <input class="form-control" id="email" type="email" placeholder="name@example.com" data-sb-validations="required,email" />
+                            <label for="email">Email address</label>
+                            <div class="invalid-feedback" data-sb-feedback="email:required">An email is required.</div>
+                            <div class="invalid-feedback" data-sb-feedback="email:email">Email is not valid.</div>
+                        </div>
+                        <!-- Phone number input-->
+                        <div class="form-floating mb-3">
+                            <input class="form-control" id="phone" type="tel" placeholder="(123) 456-7890" data-sb-validations="required" />
+                            <label for="phone">Phone number</label>
+                            <div class="invalid-feedback" data-sb-feedback="phone:required">A phone number is required.</div>
+                        </div>
+                        <!-- Message input-->
+                        <div class="form-floating mb-3">
+                            <textarea class="form-control" id="message" type="text" placeholder="Enter your message here..." style="height: 10rem" data-sb-validations="required"></textarea>
+                            <label for="message">Message</label>
+                            <div class="invalid-feedback" data-sb-feedback="message:required">A message is required.</div>
+                        </div>
+                        <!-- Submit success message-->
+                        <!---->
+                        <!-- This is what your users will see when the form-->
+                        <!-- has successfully submitted-->
+                        <div class="d-none" id="submitSuccessMessage">
+                            <div class="text-center mb-3">
+                                <div class="fw-bolder">Form submission successful!</div>
+                                To activate this form, sign up at
+                                <br />
+                                <a href="https://startbootstrap.com/solution/contact-forms">https://startbootstrap.com/solution/contact-forms</a>
+                            </div>
+                        </div>
+                        <!-- Submit error message-->
+                        <!---->
+                        <!-- This is what your users will see when there is-->
+                        <!-- an error submitting the form-->
+                        <div class="d-none" id="submitErrorMessage"><div class="text-center text-danger mb-3">Error sending message!</div></div>
+                        <!-- Submit Button-->
+                        <div class="d-grid"><button class="btn btn-primary rounded-pill btn-lg disabled" id="submitButton" type="submit">Submit</button></div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
 {% endblock %}

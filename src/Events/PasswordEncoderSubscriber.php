@@ -52,7 +52,6 @@ class PasswordEncoderSubscriber implements EventSubscriberInterface
         if ($method == "POST" && $result instanceof User) {
             return true;
         }
-
         return false;
     }
 
