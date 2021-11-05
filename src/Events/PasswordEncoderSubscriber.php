@@ -23,6 +23,7 @@ class PasswordEncoderSubscriber implements EventSubscriberInterface
 
     /**
      * @return array[]
+     * call before persist
      */
     public static function getSubscribedEvents()
     {
@@ -36,13 +37,30 @@ class PasswordEncoderSubscriber implements EventSubscriberInterface
      * Take event and request
      * verify method POST and if is a user object
      */
-    public function encodePassword(ViewEvent $event)
+    public function encodingPassword(ViewEvent $event)
     {
-        $result = $event->getControllerResult();
-        $method = $event->getRequest()->getMethod();
-        if ($result instanceof User && $method === "POST") {
-            $hash = $this->encoder->hashPassword($result, $result->getPassword());
-            $result->setPassword($hash);
+        if (!$this->isRequestValid($event)) {
+            return;
         }
+        $this->hashUserPassword($event);
+    }
+
+    public function isRequestValid($event) {
+        $method = $event->getRequest()->getMethod();
+        if ($method !== "POST") {
+            return false;
+        }
+
+        $result = $event->getControllerResult();
+        if ($result instanceof User){
+            return false;
+        }
+
+        return true;
+    }
+
+    public function hashUserPassword($user){
+        $hash = $this->encoder->hashPassword($user, $user->getPassword());
+        $user->setPassword($hash);
     }
 }
