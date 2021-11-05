@@ -46,17 +46,26 @@ class PasswordEncoderSubscriber implements EventSubscriberInterface
     }
 
     public function isRequestValid($event) {
+        if ($this->isMethodPost($event) && $this->isUserInstance($event)) {
+            return true;
+        }
+        return false;
+    }
+    public function isMethodPost($event){
         $method = $event->getRequest()->getMethod();
-        if ($method !== "POST") {
-            return false;
+        if ($method == "POST") {
+            return true;
         }
+        return false;
+    }
 
+    public function isUserInstance($event){
         $result = $event->getControllerResult();
-        if ($result instanceof User){
-            return false;
-        }
 
-        return true;
+        if ($result instanceof User){
+            return true;
+        }
+        return false;
     }
 
     public function hashUserPassword($user){
