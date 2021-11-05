@@ -1,8 +1,28 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Hello HomeController!{% endblock %}
+{% block title %}Find Your Tatoo{% endblock %}
 
 {% block body %}
+    <!-- Modal -->
+    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form method="post" action="{{ path("download") }}">
+                        <input type="email" name="email" placeholder="email"/>
+                        <button type="submit" class="btn btn-primary">Submit</button>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
     <!-- Navigation-->
     <nav class="navbar navbar-expand-lg navbar-light fixed-top shadow-sm" id="mainNav">
         <div class="container px-5">
@@ -25,6 +45,8 @@
             </div>
         </div>
     </nav>
+
+
     <!-- Mashead header-->
     <header class="masthead">
         <div class="container px-5">
@@ -35,8 +57,8 @@
                         <h1 class="display-1 lh-1 mb-3">Showcase your app beautifully.</h1>
                         <p class="lead fw-normal text-muted mb-5">Launch your mobile app landing page faster with this free, open source theme from Start Bootstrap!</p>
                         <div class="d-flex flex-column flex-lg-row align-items-center">
-                            <a class="me-lg-3 mb-4 mb-lg-0" href="#!"><img class="app-badge" src="assets/img/google-play-badge.svg" alt="..." /></a>
-                            <a href="#!"><img class="app-badge" src="assets/img/app-store-badge.svg" alt="..." /></a>
+                            <a data-bs-toggle="modal" data-bs-target="#exampleModal" class="me-lg-3 mb-4 mb-lg-0" href="#modal"><img class="app-badge" src="assets/img/google-play-badge.svg" alt="..." /></a>
+                            <a data-bs-toggle="modal" data-bs-target="#exampleModal" class="me-lg-3 mb-4 mb-lg-0" href="#modal"><img class="app-badge" src="assets/img/app-store-badge.svg" alt="..." /></a>
                         </div>
                     </div>
                 </div>
@@ -198,7 +220,7 @@
     <footer class="bg-black text-center py-5">
         <div class="container px-5">
             <div class="text-white-50 small">
-                <div class="mb-2">&copy; Your Website 2021. All Rights Reserved.</div>
+                <div class="mb-2">&copy; FindYourTatoo 2021. All Rights Reserved.</div>
                 <a href="#!">Privacy</a>
                 <span class="mx-1">&middot;</span>
                 <a href="#!">Terms</a>
