@@ -68,7 +68,8 @@ class PasswordEncoderSubscriber implements EventSubscriberInterface
         return false;
     }
 
-    public function hashUserPassword($user){
+    public function hashUserPassword($event){
+        $user = $event->getControllerResult();
         $hash = $this->encoder->hashPassword($user, $user->getPassword());
         $user->setPassword($hash);
     }
