@@ -2,6 +2,7 @@
 
 namespace App\Service\ApiService;
 
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Serializer\Encoder\JsonEncoder;
 use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
@@ -63,5 +64,10 @@ class ApiConstructorService{
      */
     public function getResponseForApi(mixed $data, array $customHeader = null): Response {
         return $this->initReponse($this->getRawJson($data), $customHeader);
+    }
+
+    public function getJsonBodyFromRequest() {
+        $request = new Request();
+        return json_decode($request->getContent(), true);
     }
 }

@@ -2,7 +2,8 @@
 
 namespace App\Controller\Api;
 
-use App\Repository\PostRepository;
+use App\Entity\Post;
+use App\Repository\MessageRepository;
 use App\Service\ApiService\ApiConstructorService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -13,13 +14,13 @@ use Symfony\Component\Routing\Annotation\Route;
 class ApiPostController extends AbstractController {
 
     private EntityManagerInterface $entityManager;
-    private PostRepository $postRepository;
+    private MessageRepository $postRepository;
     private ApiConstructorService $apiService;
 
     public function __construct(
-        PostRepository $postRepository,
+        MessageRepository      $postRepository,
         EntityManagerInterface $entityManager,
-        ApiConstructorService $apiService)
+        ApiConstructorService  $apiService)
     {
         $this->postRepository = $postRepository;
         $this->entityManager = $entityManager;
@@ -27,7 +28,7 @@ class ApiPostController extends AbstractController {
     }
 
     #[Route('/post', methods: ['GET'])]
-    public function getAllPost():Response {
+    public function getAllPost(Response $response):Response {
         $posts = $this->postRepository->findBy(['deletedAt' => null]);
         return $this->apiService->getResponseForApi($posts);
     }
@@ -39,8 +40,19 @@ class ApiPostController extends AbstractController {
     }
 
     #[Route('/post', methods: ['POST'])]
-    public function createPost():Response {
-        return $this->json('post post');
+    public function createPost(Response $response):Response {
+        try {
+
+            /*if (!$request || !$request->get('username') || !$request->request->get('description')){
+                throw new \Exception();
+            }*/
+            $post = new Post();
+            //$post->setContent();
+            //$post->setImage();
+            return $this->json($response->getContent());
+        } catch (\Exception $exception) {
+            return $this->apiService->getResponseForApi("Data no valid")->setStatusCode(422);
+        }
     }
 
     #[Route('/post', methods: ['PUT'])]

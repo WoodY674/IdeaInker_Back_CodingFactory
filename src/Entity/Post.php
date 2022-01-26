@@ -2,7 +2,7 @@
 
 namespace App\Entity;
 
-use App\Repository\PostRepository;
+use App\Repository\MessageRepository;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -42,6 +42,12 @@ class Post
      * @ORM\JoinColumn(nullable=false)
      */
     private $image;
+
+    /**
+     * @ORM\ManyToOne(targetEntity=User::class, inversedBy="posts")
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $createdBy;
 
     public function getId(): ?int
     {
@@ -104,6 +110,18 @@ class Post
     public function setImage(?Image $image): self
     {
         $this->image = $image;
+
+        return $this;
+    }
+
+    public function getCreatedBy(): ?User
+    {
+        return $this->createdBy;
+    }
+
+    public function setCreatedBy(?User $createdBy): self
+    {
+        $this->createdBy = $createdBy;
 
         return $this;
     }

@@ -92,10 +92,16 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      */
     private $ProfileImage;
 
+    /**
+     * @ORM\OneToMany(targetEntity=Post::class, mappedBy="createdBy")
+     */
+    private $posts;
+
     public function __construct()
     {
         $this->messages = new ArrayCollection();
         $this->salons = new ArrayCollection();
+        $this->posts = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -351,6 +357,36 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setProfileImage(?Image $ProfileImage): self
     {
         $this->ProfileImage = $ProfileImage;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Post[]
+     */
+    public function getPosts(): Collection
+    {
+        return $this->posts;
+    }
+
+    public function addPost(Post $post): self
+    {
+        if (!$this->posts->contains($post)) {
+            $this->posts[] = $post;
+            $post->setCreatedBy($this);
+        }
+
+        return $this;
+    }
+
+    public function removePost(Post $post): self
+    {
+        if ($this->posts->removeElement($post)) {
+            // set the owning side to null (unless already changed)
+            if ($post->getCreatedBy() === $this) {
+                $post->setCreatedBy(null);
+            }
+        }
 
         return $this;
     }
