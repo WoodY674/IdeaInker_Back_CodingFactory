@@ -12,8 +12,46 @@ class ApiController extends AbstractController
     #[Route('/', name: 'api')]
     public function index(): Response
     {
+        $route = [
+            'Post' => [
+                'GET: all' => [
+                    'route' => '/post/',
+                    'args' => 'no args'
+                ],
+                'GET: one' => [
+                    'route' => 'post/{id}',
+                    'args' => 'Id post in url'
+                ],
+                'POST: create' => [
+                    'route' => '/post/',
+                    'args' => '{ userId: id, image: "url", content: "text" }'
+                ],
+                'DELETE: delete' => [
+                    'route' => 'post/{id}',
+                    'args' => 'Id post in url'
+                ]
+            ],
+            'Salon' => [
+                'GET: all' => [
+                    'route' => '/salon/',
+                    'args' => 'no args'
+                ],
+                'GET: one' => [
+                    'route' => '/salon/{id}',
+                    'args' => 'Id salon in url'
+                ],
+                'POST: create' => [
+                    'route' => '/salon/',
+                    'args' => "{ address: 'text', city: 'text', zipCode: 'text', manager: 'userId', image: 'url' }"
+                ],
+                'DELETE: delete' => [
+                    'route' => '/salon/{id}',
+                    'args' => 'Id salon in url'
+                ]
+            ],
+        ];
         return $this->render('api/index.html.twig', [
-            'controller_name' => 'ApiController',
+            'api_route' => $route,
         ]);
     }
 }

@@ -2,11 +2,12 @@
 
 namespace App\Entity;
 
-use App\Repository\SaloRepository;
+use App\Repository\SalonRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Gedmo\Mapping\Annotation as Gedmo;
 
 /**
- * @ORM\Entity(repositoryClass=SaloRepository::class)
+ * @ORM\Entity(repositoryClass=SalonRepository::class)
  */
 class Salon
 {
@@ -46,11 +47,13 @@ class Salon
 
     /**
      * @ORM\Column(type="datetime_immutable")
+     * @Gedmo\Timestampable(on="create")
      */
     private $createdAt;
 
     /**
      * @ORM\Column(type="datetime_immutable", nullable=true)
+     * @Gedmo\Timestampable(on="update")
      */
     private $updatedAt;
 

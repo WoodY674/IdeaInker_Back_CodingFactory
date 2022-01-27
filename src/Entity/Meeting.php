@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use App\Repository\MeetingRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Gedmo\Mapping\Annotation as Gedmo;
 
 /**
  * @ORM\Entity(repositoryClass=MeetingRepository::class)
@@ -29,11 +30,13 @@ class Meeting
 
     /**
      * @ORM\Column(type="datetime_immutable")
+     * @Gedmo\Timestampable(on="create")
      */
     private $createdAt;
 
     /**
      * @ORM\Column(type="datetime_immutable", nullable=true)
+     * @Gedmo\Timestampable(on="update")
      */
     private $updatedAt;
 

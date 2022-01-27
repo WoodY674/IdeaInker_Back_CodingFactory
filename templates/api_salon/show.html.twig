@@ -1,0 +1,46 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Salon{% endblock %}
+
+{% block body %}
+    <h1>Salon</h1>
+
+    <table class="table">
+        <tbody>
+            <tr>
+                <th>Id</th>
+                <td>{{ salon.id }}</td>
+            </tr>
+            <tr>
+                <th>Address</th>
+                <td>{{ salon.address }}</td>
+            </tr>
+            <tr>
+                <th>ZipCode</th>
+                <td>{{ salon.zipCode }}</td>
+            </tr>
+            <tr>
+                <th>City</th>
+                <td>{{ salon.city }}</td>
+            </tr>
+            <tr>
+                <th>CreatedAt</th>
+                <td>{{ salon.createdAt ? salon.createdAt|date('Y-m-d H:i:s') : '' }}</td>
+            </tr>
+            <tr>
+                <th>UpdatedAt</th>
+                <td>{{ salon.updatedAt ? salon.updatedAt|date('Y-m-d H:i:s') : '' }}</td>
+            </tr>
+            <tr>
+                <th>DeletedAt</th>
+                <td>{{ salon.deletedAt ? salon.deletedAt|date('Y-m-d H:i:s') : '' }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <a href="{{ path('api_salon_index') }}">back to list</a>
+
+    <a href="{{ path('api_salon_edit', {'id': salon.id}) }}">edit</a>
+
+    {{ include('api_salon/_delete_form.html.twig') }}
+{% endblock %}

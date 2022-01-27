@@ -1,0 +1,13 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Edit Salon{% endblock %}
+
+{% block body %}
+    <h1>Edit Salon</h1>
+
+    {{ include('api_salon/_form.html.twig', {'button_label': 'Update'}) }}
+
+    <a href="{{ path('api_salon_index') }}">back to list</a>
+
+    {{ include('api_salon/_delete_form.html.twig') }}
+{% endblock %}

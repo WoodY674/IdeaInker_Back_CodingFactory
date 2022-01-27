@@ -1,0 +1,11 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}New Salon{% endblock %}
+
+{% block body %}
+    <h1>Create new Salon</h1>
+
+    {{ include('api_salon/_form.html.twig') }}
+
+    <a href="{{ path('api_salon_index') }}">back to list</a>
+{% endblock %}
