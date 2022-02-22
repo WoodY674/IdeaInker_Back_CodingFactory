@@ -9,10 +9,9 @@ use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
+use ApiPlatform\Core\Annotation\ApiResource;
 
-/**
- * @ORM\Entity(repositoryClass=UserRepository::class)
- */
+#[ApiResource, ORM\Entity(UserRepository::class)]
 class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
     /**
