@@ -11,7 +11,10 @@ use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 use ApiPlatform\Core\Annotation\ApiResource;
 
-#[ApiResource, ORM\Entity(UserRepository::class)]
+/**
+ * @ORM\Entity(repositoryClass=UserRepository::class)
+ */
+#[ApiResource]
 class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
     /**
@@ -58,7 +61,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private $zipCode;
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * @ORM\Column(type="string", length=255, nullable=true)
      */
     private $city;
 
