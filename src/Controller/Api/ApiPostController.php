@@ -9,6 +9,7 @@ use App\Repository\UserRepository;
 use App\Service\ApiService\ApiConstructorService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
@@ -34,22 +35,24 @@ class ApiPostController extends AbstractController
     }
 
     #[Route('/', name: 'post_all', methods: ['GET'])]
-    public function getAllPost(): Response {
+    public function getAllPost(Request $request): Response {
         $posts = $this->postRepository->findBy(['deletedAt' => null]);
         return $this->apiService->getResponseForApi($posts);
     }
 
     #[Route('/{id}', name: 'post_show', methods: ['GET'])]
-    public function getOnePost($id): Response {
+    public function getOnePost($id, Request $request): Response {
         $post = $this->postRepository->findOneBy(['id' => $id, 'deletedAt' => null]);
+
         return $this->apiService->getResponseForApi($post);
     }
 
     #[Route('/', name: 'post_new', methods: ['POST'])]
-    public function newPost(): Response
-    {
+    public function newPost(Request $request): Response {
+        $response = $this->apiService->getJsonBodyFromRequest($request);
+
         try {
-            $response = $this->apiService->getJsonBodyFromRequest();
+            $response = $this->apiService->getJsonBodyFromRequest($request);
             if (!empty($request)) {
                 throw new \Exception();
             }
@@ -57,7 +60,6 @@ class ApiPostController extends AbstractController
             if (!$user) {
                 throw new \Exception();
             }
-
             $image = new Image();
             $image->setImage($response['image']);
             $this->entityManager->persist($image);
@@ -68,6 +70,7 @@ class ApiPostController extends AbstractController
             $post->setCreatedBy($user);
 
             $this->entityManager->persist($post);
+
             $this->entityManager->flush();
 
             return $this->apiService->getResponseForApi($user);
