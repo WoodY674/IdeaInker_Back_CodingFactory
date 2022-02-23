@@ -1,0 +1,22 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:14.0
+    restart: always
+    environment:
+        POSTGRES_USER: tattoo
+        POSTGRES_PASSWORD: tattoo
+        PGDATA: /var/lib/postgresql/data/pgdata
+
+    volumes:
+      - type: volume
+        source: dbtest
+        target: /var/lib/postgresql/data/pgdata
+    ports:
+      - 5432:5432
+
+    #php:
+    #node:
+volumes:
+  dbtest:
