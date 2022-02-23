@@ -190,7 +190,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     /**
      * @see UserInterface
-     * @SerializedName("password")
      */
     public function eraseCredentials()
     {

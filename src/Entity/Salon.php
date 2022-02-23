@@ -7,10 +7,10 @@ use App\Repository\SalonRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 
+#[ApiResource]
 /**
  * @ORM\Entity(repositoryClass=SalonRepository::class)
  */
-#[ApiResource]
 class Salon
 {
     /**
