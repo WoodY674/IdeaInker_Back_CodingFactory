@@ -36,7 +36,7 @@ class Salon
     private $city;
 
     /**
-     * @ORM\ManyToOne(targetEntity=User::class, inversedBy="salos")
+     * @ORM\ManyToOne(targetEntity=User::class, inversedBy="salons")
      * @ORM\JoinColumn(nullable=false)
      */
     private $manager;
