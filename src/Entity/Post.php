@@ -10,7 +10,9 @@ use Gedmo\Mapping\Annotation as Gedmo;
 /**
  * @ORM\Entity(repositoryClass=PostRepository::class)
  */
-#[ApiResource]
+#[ApiResource(
+    attributes: ["security" => "is_granted('ROLE_USER')"],
+)]
 class Post
 {
     /**
