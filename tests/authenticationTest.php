@@ -19,8 +19,8 @@ class AuthenticationTest extends ApiTestCase
         $response = $client->request('POST', '/authentication_token', [
             'headers' => ['Content-Type' => 'application/json'],
             'json' => [
-                'email' => 'test@bg.fr',
-                'password' => 'bg',
+                'email' => 'test1@test.com',
+                'password' => 'password',
             ],
         ]);
 

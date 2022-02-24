@@ -129,9 +129,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     public function __construct()
     {
-        // $this->messages = new ArrayCollection();
-        // $this->salons = new ArrayCollection();
-        // $this->posts = new ArrayCollection();
+        $this->messages = new ArrayCollection();
+        $this->salons = new ArrayCollection();
+        $this->posts = new ArrayCollection();
     }
 
     public function getId(): ?int

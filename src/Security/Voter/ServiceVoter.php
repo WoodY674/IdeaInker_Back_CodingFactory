@@ -2,7 +2,10 @@
 
 namespace App\Security\Voter;
 
+use App\Entity\Meeting;
+use App\Entity\Message;
 use App\Entity\Post;
+use App\Entity\Salon;
 use App\Entity\User;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\Voter;
@@ -45,10 +48,6 @@ class ServiceVoter extends Voter {
         if ($this->security->isGranted("ROLE_ADMIN")) {
             return true;
         }
-
-        if ($subject->getCreatedBy() === null) {
-            return false;
-        }
         // ... (check conditions and return true to grant permission) ...
         return $this->getResponseByInstance($attribute, $subject, $user);
     }
@@ -56,12 +55,56 @@ class ServiceVoter extends Voter {
     private function getResponseByInstance(string $attribute, $subject, $user): bool {
 
         if ($subject instanceof Post) {
+
+            if ($subject->getCreatedBy() === null) {
+                return false;
+            }
+
             switch ($attribute) {
                 case self::CREATE:
                 case self::READ:
                     return $this->security->isGranted("ROLE_USER");
                 case self::EDIT:
                     return $this->isOwnerPost($user, $subject);
+                case self::DELETE:
+                    return $this->security->isGranted("ROLE_ADMIN");
+            }
+        }
+
+        if ($subject instanceof Meeting) {
+
+            switch ($attribute) {
+                case self::CREATE:
+                case self::READ:
+                    return $this->security->isGranted("ROLE_USER");
+                //case self::EDIT:
+                    //return $this->security->isGranted("ROLE_USER");
+                case self::DELETE:
+                    return $this->security->isGranted("ROLE_ADMIN");
+            }
+        }
+
+        if ($subject instanceof Message) {
+
+            switch ($attribute) {
+                case self::CREATE:
+                case self::READ:
+                    return $this->security->isGranted("ROLE_USER");
+                //case self::EDIT:
+                //return $this->security->isGranted("ROLE_USER");
+                case self::DELETE:
+                    return $this->security->isGranted("ROLE_ADMIN");
+            }
+        }
+
+        if ($subject instanceof Salon) {
+
+            switch ($attribute) {
+                case self::CREATE:
+                case self::READ:
+                    return $this->security->isGranted("ROLE_USER");
+                //case self::EDIT:
+                //return $this->security->isGranted("ROLE_USER");
                 case self::DELETE:
                     return $this->security->isGranted("ROLE_ADMIN");
             }

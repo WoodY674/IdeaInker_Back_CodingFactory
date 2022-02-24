@@ -32,8 +32,8 @@ class ApiUserTest extends ApiTestCase
     public function testCreateUser(): void
     {
         $response = static::createClient()->request('POST', '/api/users', ['json' => [
-            'email' => 'test@test.com',
-            'password' => 'test'
+            'email' => 'test1@test.com',
+            'password' => 'password'
         ]]);
 
         $this->assertResponseStatusCodeSame(201);
@@ -52,8 +52,8 @@ class ApiUserTest extends ApiTestCase
     public function testPutUser(): void
     {
         $response = static::createClient()->request('POST', '/api/users', ['json' => [
-            'email' => 'test@test.com',
-            'password' => 'test'
+            'email' => 'test1@test.com',
+            'password' => 'password'
         ]]);
 
         $jsonContent = $response->getContent();
@@ -67,8 +67,8 @@ class ApiUserTest extends ApiTestCase
 
 
         static::createClient()->request('PUT', "/api/users/$id", ['json' => [
-            'email' => 'testPUT@test.com',
-            'password' => 'testPUT'
+            'email' => 'test1@test.com',
+            'password' => 'password'
         ]]);
 
         $this->assertResponseStatusCodeSame(200);

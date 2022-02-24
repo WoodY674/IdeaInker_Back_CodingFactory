@@ -49,7 +49,7 @@ class ApiMeetingTest extends ApiTestCase
         static::createClient()->request('DELETE', "/api/meetings/$id");
 
     }
-    public function testPutUser(): void
+    public function testPutMeeting(): void
     {
         $response = static::createClient()->request('POST', '/api/meetings', ['json' => [
             'startAt' => '2022-02-24T15:03:03.140Z',
