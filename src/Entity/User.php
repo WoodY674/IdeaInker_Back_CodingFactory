@@ -13,6 +13,7 @@ use ApiPlatform\Core\Annotation\ApiResource;
 
 /**
  * @ORM\Entity(repositoryClass=UserRepository::class)
+ * @ORM\Table("simpleuser")
  */
 #[ApiResource]
 class User implements UserInterface, PasswordAuthenticatedUserInterface
@@ -22,6 +23,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
      */
+    #[ApiProperty(identifier: true)]
     private $id;
 
     /**
@@ -70,42 +72,42 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      */
     private $birthday;
 
-    /**
-     * @ORM\Column(type="datetime_immutable")
-     * @Gedmo\Timestampable(on="create")
-     */
-    private $createdAt;
+     /**
+      * @ORM\Column(type="datetime_immutable")
+      * @Gedmo\Timestampable(on="create")
+      */
+     private $createdAt;
 
-    /**
-     * @ORM\Column(type="datetime_immutable", nullable=true)
-     */
-    private $deletedAt;
+     /**
+      * @ORM\Column(type="datetime_immutable", nullable=true)
+      */
+     private $deletedAt;
 
-    /**
-     * @ORM\OneToMany(targetEntity=Message::class, mappedBy="sendBy")
-     */
-    private $messages;
+     /**
+      * @ORM\OneToMany(targetEntity=Message::class, mappedBy="sendBy")
+      */
+     private $messages;
 
-    /**
-     * @ORM\OneToMany(targetEntity=Salon::class, mappedBy="manager")
-     */
-    private $salons;
+     /**
+      * @ORM\OneToMany(targetEntity=Salon::class, mappedBy="manager")
+      */
+     private $salons;
 
-    /**
-     * @ORM\OneToOne(targetEntity=Image::class, cascade={"persist", "remove"})
-     */
-    private $ProfileImage;
+     /**
+      * @ORM\OneToOne(targetEntity=Image::class, cascade={"persist", "remove"})
+      */
+     private $profileImage;
 
-    /**
-     * @ORM\OneToMany(targetEntity=Post::class, mappedBy="createdBy")
-     */
-    private $posts;
+     /**
+      * @ORM\OneToMany(targetEntity=Post::class, mappedBy="createdBy")
+      */
+     private $posts;
 
     public function __construct()
     {
-        $this->messages = new ArrayCollection();
-        $this->salons = new ArrayCollection();
-        $this->posts = new ArrayCollection();
+        // $this->messages = new ArrayCollection();
+        // $this->salons = new ArrayCollection();
+        // $this->posts = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -293,105 +295,105 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    /**
-     * @return Collection|Message[]
-     */
-    public function getMessages(): Collection
-    {
-        return $this->messages;
-    }
+     /**
+      * @return Collection|Message[]
+      */
+     public function getMessages(): Collection
+     {
+         return $this->messages;
+     }
 
-    public function addMessage(Message $message): self
-    {
-        if (!$this->messages->contains($message)) {
-            $this->messages[] = $message;
-            $message->setSendBy($this);
-        }
+     public function addMessage(Message $message): self
+     {
+         if (!$this->messages->contains($message)) {
+             $this->messages[] = $message;
+             $message->setSendBy($this);
+         }
 
-        return $this;
-    }
+         return $this;
+     }
 
-    public function removeMessage(Message $message): self
-    {
-        if ($this->messages->removeElement($message)) {
-            // set the owning side to null (unless already changed)
-            if ($message->getSendBy() === $this) {
-                $message->setSendBy(null);
-            }
-        }
+     public function removeMessage(Message $message): self
+     {
+         if ($this->messages->removeElement($message)) {
+             // set the owning side to null (unless already changed)
+             if ($message->getSendBy() === $this) {
+                 $message->setSendBy(null);
+             }
+         }
 
-        return $this;
-    }
+         return $this;
+     }
 
-    /**
-     * @return Collection|Salon[]
-     */
-    public function getSalons(): Collection
-    {
-        return $this->salons;
-    }
+     /**
+      * @return Collection|Salon[]
+      */
+     public function getSalons(): Collection
+     {
+         return $this->salons;
+     }
 
-    public function addSalon(Salon $salon): self
-    {
-        if (!$this->salons->contains($salon)) {
-            $this->salons[] = $salon;
-            $salon->setManager($this);
-        }
+     public function addSalon(Salon $salon): self
+     {
+         if (!$this->salons->contains($salon)) {
+             $this->salons[] = $salon;
+             $salon->setManager($this);
+         }
 
-        return $this;
-    }
+         return $this;
+     }
 
-    public function removeSalon(Salon $salon): self
-    {
-        if ($this->salons->removeElement($salon)) {
-            // set the owning side to null (unless already changed)
-            if ($salon->getManager() === $this) {
-                $salon->setManager(null);
-            }
-        }
+     public function removeSalon(Salon $salon): self
+     {
+         if ($this->salons->removeElement($salon)) {
+             // set the owning side to null (unless already changed)
+             if ($salon->getManager() === $this) {
+                 $salon->setManager(null);
+             }
+         }
 
-        return $this;
-    }
+         return $this;
+     }
 
-    public function getProfileImage(): ?Image
-    {
-        return $this->ProfileImage;
-    }
+     public function getProfileImage(): ?Image
+     {
+         return $this->profileImage;
+     }
 
-    public function setProfileImage(?Image $ProfileImage): self
-    {
-        $this->ProfileImage = $ProfileImage;
+     public function setProfileImage(?Image $profileImage): self
+     {
+         $this->profileImage = $profileImage;
 
-        return $this;
-    }
+         return $this;
+     }
 
-    /**
-     * @return Collection|Post[]
-     */
-    public function getPosts(): Collection
-    {
-        return $this->posts;
-    }
+     /**
+      * @return Collection|Post[]
+      */
+     public function getPosts(): Collection
+     {
+         return $this->posts;
+     }
 
-    public function addPost(Post $post): self
-    {
-        if (!$this->posts->contains($post)) {
-            $this->posts[] = $post;
-            $post->setCreatedBy($this);
-        }
+     public function addPost(Post $post): self
+     {
+         if (!$this->posts->contains($post)) {
+             $this->posts[] = $post;
+             $post->setCreatedBy($this);
+         }
 
-        return $this;
-    }
+         return $this;
+     }
 
-    public function removePost(Post $post): self
-    {
-        if ($this->posts->removeElement($post)) {
-            // set the owning side to null (unless already changed)
-            if ($post->getCreatedBy() === $this) {
-                $post->setCreatedBy(null);
-            }
-        }
+     public function removePost(Post $post): self
+     {
+         if ($this->posts->removeElement($post)) {
+             // set the owning side to null (unless already changed)
+             if ($post->getCreatedBy() === $this) {
+                 $post->setCreatedBy(null);
+             }
+         }
 
-        return $this;
-    }
+         return $this;
+     }
 }
