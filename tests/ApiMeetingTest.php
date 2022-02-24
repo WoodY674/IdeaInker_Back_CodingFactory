@@ -7,11 +7,11 @@ use ApiPlatform\Core\Bridge\Symfony\Bundle\Test\ApiTestCase;
 use App\Entity\User;
 
 
-class ApiUserTest extends ApiTestCase
+class ApiMeetingTest extends ApiTestCase
 {
-    public function testGetAllUsers(): void
+    public function testGetAllMeetings(): void
     {
-        static::createClient()->request('GET', '/api/users');
+        static::createClient()->request('GET', '/api/meetings');
         //Assert that the returned response is 200
         $this->assertResponseIsSuccessful();
         // Asserts that the returned content type is JSON-LD (the default)
@@ -19,9 +19,9 @@ class ApiUserTest extends ApiTestCase
 
     }
 
-    public function testGetOneUsers(): void
+    public function testGetOneMeeting(): void
     {
-        static::createClient()->request('GET', '/api/users/12');
+        static::createClient()->request('GET', '/api/meetings/2');
         //Assert that the returned response is 200
         $this->assertResponseIsSuccessful();
         // Asserts that the returned content type is JSON-LD (the default)
@@ -29,11 +29,11 @@ class ApiUserTest extends ApiTestCase
 
     }
 
-    public function testCreateUser(): void
+    public function testCreateMeeting(): void
     {
-        $response = static::createClient()->request('POST', '/api/users', ['json' => [
-            'email' => 'test@test.com',
-            'password' => 'test'
+        $response = static::createClient()->request('POST', '/api/meetings', ['json' => [
+            'startAt' => '2022-02-24T15:03:03.140Z',
+            'endAt' => '2022-02-24T16:03:03.140Z'
         ]]);
 
         $this->assertResponseStatusCodeSame(201);
@@ -46,14 +46,14 @@ class ApiUserTest extends ApiTestCase
 
 
         print_r($id);
-        static::createClient()->request('DELETE', "/api/users/$id");
+        static::createClient()->request('DELETE', "/api/meetings/$id");
 
     }
     public function testPutUser(): void
     {
-        $response = static::createClient()->request('POST', '/api/users', ['json' => [
-            'email' => 'test@test.com',
-            'password' => 'test'
+        $response = static::createClient()->request('POST', '/api/meetings', ['json' => [
+            'startAt' => '2022-02-24T15:03:03.140Z',
+            'endAt' => '2022-02-24T16:03:03.140Z'
         ]]);
 
         $jsonContent = $response->getContent();
@@ -66,9 +66,9 @@ class ApiUserTest extends ApiTestCase
 
 
 
-        static::createClient()->request('PUT', "/api/users/$id", ['json' => [
-            'email' => 'testPUT@test.com',
-            'password' => 'testPUT'
+        static::createClient()->request('PUT', "/api/meetings/$id", ['json' => [
+            'startAt' => '2023-02-24T15:03:03.140Z',
+            'endAt' => '2023-02-24T16:03:03.140Z'
         ]]);
 
         $this->assertResponseStatusCodeSame(200);
@@ -78,7 +78,7 @@ class ApiUserTest extends ApiTestCase
         // Delete the user we just created
 
         print_r($id);
-        static::createClient()->request('DELETE', "/api/users/$id");
+        static::createClient()->request('DELETE', "/api/meetings/$id");
 
     }
 }

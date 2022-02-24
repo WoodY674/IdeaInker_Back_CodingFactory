@@ -4,14 +4,15 @@
 
 namespace App\Tests;
 use ApiPlatform\Core\Bridge\Symfony\Bundle\Test\ApiTestCase;
+use App\Entity\Post;
 use App\Entity\User;
 
 
-class ApiUserTest extends ApiTestCase
+class ApiPostsTest extends ApiTestCase
 {
-    public function testGetAllUsers(): void
+    public function testGetAllPosts(): void
     {
-        static::createClient()->request('GET', '/api/users');
+        $response = static::createClient()->request('GET', '/api/posts');
         //Assert that the returned response is 200
         $this->assertResponseIsSuccessful();
         // Asserts that the returned content type is JSON-LD (the default)
@@ -19,9 +20,9 @@ class ApiUserTest extends ApiTestCase
 
     }
 
-    public function testGetOneUsers(): void
+    public function testGetOneSalon(): void
     {
-        static::createClient()->request('GET', '/api/users/12');
+        $response = static::createClient()->request('GET', '/api/posts/3');
         //Assert that the returned response is 200
         $this->assertResponseIsSuccessful();
         // Asserts that the returned content type is JSON-LD (the default)
@@ -29,11 +30,13 @@ class ApiUserTest extends ApiTestCase
 
     }
 
-    public function testCreateUser(): void
+    public function testCreatePost(): void
     {
-        $response = static::createClient()->request('POST', '/api/users', ['json' => [
-            'email' => 'test@test.com',
-            'password' => 'test'
+
+
+        $response = static::createClient()->request('POST', '/api/posts', ['json' => [
+            'image' => '/api/images/1',
+            'createdBy' => '/api/users/12'
         ]]);
 
         $this->assertResponseStatusCodeSame(201);
@@ -43,32 +46,29 @@ class ApiUserTest extends ApiTestCase
         print_r($jsonContent);
         $jsonArray = json_decode($jsonContent,true);
         $id = $jsonArray["id"];
-
 
         print_r($id);
-        static::createClient()->request('DELETE', "/api/users/$id");
+        $response = static::createClient()->request('DELETE', "/api/posts/$id");
 
     }
-    public function testPutUser(): void
+    public function testPutPost(): void
     {
-        $response = static::createClient()->request('POST', '/api/users', ['json' => [
-            'email' => 'test@test.com',
-            'password' => 'test'
+        $response = static::createClient()->request('POST', '/api/posts', ['json' => [
+            'image' => '/api/images/1',
+            'createdBy' => '/api/users/12'
         ]]);
+
+        $this->assertResponseStatusCodeSame(201);
+        $this->assertResponseHeaderSame('content-type', 'application/ld+json; charset=utf-8');
 
         $jsonContent = $response->getContent();
         print_r($jsonContent);
         $jsonArray = json_decode($jsonContent,true);
         $id = $jsonArray["id"];
 
-        $this->assertResponseStatusCodeSame(201);
-        $this->assertResponseHeaderSame('content-type', 'application/ld+json; charset=utf-8');
-
-
-
-        static::createClient()->request('PUT', "/api/users/$id", ['json' => [
-            'email' => 'testPUT@test.com',
-            'password' => 'testPUT'
+        $response = static::createClient()->request('PUT', "/api/posts/$id", ['json' => [
+            'image' => '/api/images/1',
+            'createdBy' => '/api/users/12'
         ]]);
 
         $this->assertResponseStatusCodeSame(200);
@@ -78,7 +78,7 @@ class ApiUserTest extends ApiTestCase
         // Delete the user we just created
 
         print_r($id);
-        static::createClient()->request('DELETE', "/api/users/$id");
+        $response = static::createClient()->request('DELETE', "/api/posts/$id");
 
     }
 }
