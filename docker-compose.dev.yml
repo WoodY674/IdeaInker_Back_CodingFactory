@@ -36,6 +36,14 @@ services:
       MERCURE_PUBLIC_URL: https://${SERVER_NAME:-localhost}/.well-known/mercure
       MERCURE_JWT_SECRET: ${CADDY_MERCURE_JWT_SECRET:-!ChangeMe!}
 
+  apache:
+    image: 'bitnami/apache:latest'
+    ports:
+      - '81:8081'
+      - '443:8443'
+    volumes:
+      - /path/to/app
+
 # Mercure is installed as a Caddy module, prevent the Flex recipe from installing another service
 ###> symfony/mercure-bundle ###
 ###< symfony/mercure-bundle ###
@@ -44,6 +52,7 @@ volumes:
   php_socket:
   ###> doctrine/doctrine-bundle ###
   dbtest:
+  apache:
 ###< doctrine/doctrine-bundle ###
 ###> symfony/mercure-bundle ###
 ###< symfony/mercure-bundle ###
