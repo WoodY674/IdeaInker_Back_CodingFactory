@@ -9,9 +9,25 @@ use App\Entity\User;
 
 class ApiUserTest extends ApiTestCase
 {
+    private function addToken()
+    {
+        $client = self::createClient();
+        // retrieve a token
+        $response = $client->request('POST', '/authentication_token', [
+            'headers' => ['Content-Type' => 'application/json'],
+            'json' => [
+                'email' => 'test1@test.com',
+                'password' => 'password',
+            ],
+        ]);
+
+        $json = $response->toArray();
+        return ['auth_bearer' => $json["token"]];
+    }
+
     public function testGetAllUsers(): void
     {
-        static::createClient()->request('GET', '/api/users');
+        static::createClient()->request('GET', '/api/users',$this->addToken());
         //Assert that the returned response is 200
         $this->assertResponseIsSuccessful();
         // Asserts that the returned content type is JSON-LD (the default)
@@ -21,7 +37,7 @@ class ApiUserTest extends ApiTestCase
 
     public function testGetOneUsers(): void
     {
-        static::createClient()->request('GET', '/api/users/12');
+        static::createClient()->request('GET', '/api/users/12',$this->addToken());
         //Assert that the returned response is 200
         $this->assertResponseIsSuccessful();
         // Asserts that the returned content type is JSON-LD (the default)
@@ -31,33 +47,37 @@ class ApiUserTest extends ApiTestCase
 
     public function testCreateUser(): void
     {
-        $response = static::createClient()->request('POST', '/api/users', ['json' => [
-            'email' => 'test1@test.com',
-            'password' => 'password'
-        ]]);
+        $response = static::createClient()->request('POST', '/api/users', [
+            'json' => [
+                'email' => 'test1@test.com',
+                'password' => 'password'
+            ],
+            $this->addToken()
+        ]);
 
         $this->assertResponseStatusCodeSame(201);
         $this->assertResponseHeaderSame('content-type', 'application/ld+json; charset=utf-8');
 
         $jsonContent = $response->getContent();
-        print_r($jsonContent);
         $jsonArray = json_decode($jsonContent,true);
         $id = $jsonArray["id"];
 
 
         print_r($id);
-        static::createClient()->request('DELETE', "/api/users/$id");
+        static::createClient()->request('DELETE', "/api/users/$id", $this->addToken());
 
     }
     public function testPutUser(): void
     {
-        $response = static::createClient()->request('POST', '/api/users', ['json' => [
-            'email' => 'test1@test.com',
-            'password' => 'password'
-        ]]);
+        $response = static::createClient()->request('POST', '/api/users', [
+            'json' => [
+                'email' => 'test1@test.com',
+                'password' => 'password'
+            ],
+            $this->addToken()
+        ]);
 
         $jsonContent = $response->getContent();
-        print_r($jsonContent);
         $jsonArray = json_decode($jsonContent,true);
         $id = $jsonArray["id"];
 
@@ -66,19 +86,20 @@ class ApiUserTest extends ApiTestCase
 
 
 
-        static::createClient()->request('PUT', "/api/users/$id", ['json' => [
-            'email' => 'test1@test.com',
-            'password' => 'password'
-        ]]);
+        static::createClient()->request('PUT', "/api/users/$id", [
+            'json' => [
+                'email' => 'test1@test.com',
+                'password' => 'password'
+            ],
+            $this->addToken()
+        ]);
 
         $this->assertResponseStatusCodeSame(200);
         $this->assertResponseHeaderSame('content-type', 'application/ld+json; charset=utf-8');
 
 
         // Delete the user we just created
-
-        print_r($id);
-        static::createClient()->request('DELETE', "/api/users/$id");
+        static::createClient()->request('DELETE', "/api/users/$id",$this->addToken());
 
     }
 }
