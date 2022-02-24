@@ -40,16 +40,14 @@ class ApiMeetingTest extends ApiTestCase
         $this->assertResponseHeaderSame('content-type', 'application/ld+json; charset=utf-8');
 
         $jsonContent = $response->getContent();
-        print_r($jsonContent);
         $jsonArray = json_decode($jsonContent,true);
         $id = $jsonArray["id"];
 
 
-        print_r($id);
         static::createClient()->request('DELETE', "/api/meetings/$id");
 
     }
-    public function testPutUser(): void
+    public function testPutMeeting(): void
     {
         $response = static::createClient()->request('POST', '/api/meetings', ['json' => [
             'startAt' => '2022-02-24T15:03:03.140Z',
@@ -57,7 +55,6 @@ class ApiMeetingTest extends ApiTestCase
         ]]);
 
         $jsonContent = $response->getContent();
-        print_r($jsonContent);
         $jsonArray = json_decode($jsonContent,true);
         $id = $jsonArray["id"];
 
@@ -67,8 +64,8 @@ class ApiMeetingTest extends ApiTestCase
 
 
         static::createClient()->request('PUT', "/api/meetings/$id", ['json' => [
-            'startAt' => '2023-02-24T15:03:03.140Z',
-            'endAt' => '2023-02-24T16:03:03.140Z'
+            'startAt' => '2023-02-24T15:07:03.140Z',
+            'endAt' => '2023-02-24T17:03:03.140Z'
         ]]);
 
         $this->assertResponseStatusCodeSame(200);
@@ -77,7 +74,6 @@ class ApiMeetingTest extends ApiTestCase
 
         // Delete the user we just created
 
-        print_r($id);
         static::createClient()->request('DELETE', "/api/meetings/$id");
 
     }

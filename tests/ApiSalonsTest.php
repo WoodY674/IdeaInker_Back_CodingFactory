@@ -31,41 +31,55 @@ class ApiSalonsTest extends ApiTestCase
 
     public function testCreateSalon(): void
     {
+        $responseImage = static::createClient()->request('POST', '/api/images', ['json' => [
+            'image' => 'https://www.neonmag.fr/imgre/fit/https.3A.2F.2Fi.2Epmdstatic.2Enet.2FNEO.2F2019.2F11.2F24.2F30e037d6-34a5-49ea-ac52-77b7e796342c.2Ejpeg/1170x658/background-color/ffffff/quality/90/7-tatouages-insolites-sur-la-langue.jpg',
+        ]]);
+
+        $jsonContentImage = $responseImage->getContent();
+        $jsonArrayImage = json_decode($jsonContentImage,true);
+        $idImage = $jsonArrayImage["id"];
+
         $response = static::createClient()->request('POST', '/api/salons', ['json' => [
-            'address' => '2 rue des poissonniers',
+            'address' => '8 rue des poissonniers',
             'zipCode' => '75017',
             'city' => 'Paris',
             'manager' => '/api/users/12',
-            'salonImage' => '/api/images/73'
+            'salonImage' => "/api/images/$idImage"
         ]]);
 
         $this->assertResponseStatusCodeSame(201);
         $this->assertResponseHeaderSame('content-type', 'application/ld+json; charset=utf-8');
 
         $jsonContent = $response->getContent();
-        print_r($jsonContent);
         $jsonArray = json_decode($jsonContent,true);
         $id = $jsonArray["id"];
 
-        print_r($id);
         static::createClient()->request('DELETE', "/api/salons/$id");
+        static::createClient()->request('DELETE', "/api/images/$idImage");
 
     }
-    public function testPutUser(): void
+    public function testPutSalon(): void
     {
+        $responseImage = static::createClient()->request('POST', '/api/images', ['json' => [
+            'image' => 'https://www.neonmag.fr/imgre/fit/https.3A.2F.2Fi.2Epmdstatic.2Enet.2FNEO.2F2019.2F11.2F24.2F30e037d6-34a5-49ea-ac52-77b7e796342c.2Ejpeg/1170x658/background-color/ffffff/quality/90/7-tatouages-insolites-sur-la-langue.jpg',
+        ]]);
+
+        $jsonContentImage = $responseImage->getContent();
+        $jsonArrayImage = json_decode($jsonContentImage,true);
+        $idImage = $jsonArrayImage["id"];
+
         $response = static::createClient()->request('POST', '/api/salons', ['json' => [
-            'address' => '2 rue des poissonniers',
+            'address' => '5 rue des poissonniers',
             'zipCode' => '75017',
             'city' => 'Paris',
             'manager' => '/api/users/12',
-            'salonImage' => '/api/images/74'
+            'salonImage' => "/api/images/$idImage"
         ]]);
 
         $this->assertResponseStatusCodeSame(201);
         $this->assertResponseHeaderSame('content-type', 'application/ld+json; charset=utf-8');
 
         $jsonContent = $response->getContent();
-        print_r($jsonContent);
         $jsonArray = json_decode($jsonContent,true);
         $id = $jsonArray["id"];
 
@@ -74,7 +88,7 @@ class ApiSalonsTest extends ApiTestCase
             'zipCode' => '95000',
             'city' => 'Cergy',
             'manager' => '/api/users/12',
-            'salonImage' => '/api/images/75'
+            'salonImage' => "/api/images/$idImage"
         ]]);
 
         $this->assertResponseStatusCodeSame(200);
@@ -83,8 +97,9 @@ class ApiSalonsTest extends ApiTestCase
 
         // Delete the user we just created
 
-        print_r($id);
-        $response = static::createClient()->request('DELETE', "/api/salons/$id");
+        static::createClient()->request('DELETE', "/api/salons/$id");
+        static::createClient()->request('DELETE', "/api/images/$idImage");
+
 
     }
 }

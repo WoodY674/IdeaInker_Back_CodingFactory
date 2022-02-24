@@ -40,12 +40,10 @@ class ApiUserTest extends ApiTestCase
         $this->assertResponseHeaderSame('content-type', 'application/ld+json; charset=utf-8');
 
         $jsonContent = $response->getContent();
-        print_r($jsonContent);
         $jsonArray = json_decode($jsonContent,true);
         $id = $jsonArray["id"];
 
 
-        print_r($id);
         static::createClient()->request('DELETE', "/api/users/$id");
 
     }
@@ -57,7 +55,6 @@ class ApiUserTest extends ApiTestCase
         ]]);
 
         $jsonContent = $response->getContent();
-        print_r($jsonContent);
         $jsonArray = json_decode($jsonContent,true);
         $id = $jsonArray["id"];
 
@@ -77,7 +74,6 @@ class ApiUserTest extends ApiTestCase
 
         // Delete the user we just created
 
-        print_r($id);
         static::createClient()->request('DELETE', "/api/users/$id");
 
     }

@@ -4,15 +4,14 @@
 
 namespace App\Tests;
 use ApiPlatform\Core\Bridge\Symfony\Bundle\Test\ApiTestCase;
-use App\Entity\Post;
-use App\Entity\User;
+use App\Entity\Message;
 
 
-class ApiPostsTest extends ApiTestCase
+class ApiMessagesTest extends ApiTestCase
 {
-    public function testGetAllPosts(): void
+    public function testGetAllMessages(): void
     {
-        $response = static::createClient()->request('GET', '/api/posts');
+        $response = static::createClient()->request('GET', '/api/messages');
         //Assert that the returned response is 200
         $this->assertResponseIsSuccessful();
         // Asserts that the returned content type is JSON-LD (the default)
@@ -20,9 +19,9 @@ class ApiPostsTest extends ApiTestCase
 
     }
 
-    public function testGetOnePost(): void
+    public function testGetOneMessage(): void
     {
-        $response = static::createClient()->request('GET', '/api/posts/3');
+        $response = static::createClient()->request('GET', '/api/messages/1');
         //Assert that the returned response is 200
         $this->assertResponseIsSuccessful();
         // Asserts that the returned content type is JSON-LD (the default)
@@ -30,13 +29,13 @@ class ApiPostsTest extends ApiTestCase
 
     }
 
-    public function testCreatePost(): void
+    public function testCreateMessage(): void
     {
-
-
-        $response = static::createClient()->request('POST', '/api/posts', ['json' => [
-            'image' => '/api/images/1',
-            'createdBy' => '/api/users/12'
+        $response = static::createClient()->request('POST', '/api/messages', ['json' => [
+            'message' => 'test',
+            'sendAt' => '2022-02-24T15:03:03.140Z',
+            'sendBy' => '/api/users/12',
+            'recipient' => '/api/users/14'
         ]]);
 
         $this->assertResponseStatusCodeSame(201);
@@ -46,14 +45,16 @@ class ApiPostsTest extends ApiTestCase
         $jsonArray = json_decode($jsonContent,true);
         $id = $jsonArray["id"];
 
-        static::createClient()->request('DELETE', "/api/posts/$id");
+        static::createClient()->request('DELETE', "/api/messages/$id");
 
     }
-    public function testPutPost(): void
+    public function testPutMessages(): void
     {
-        $response = static::createClient()->request('POST', '/api/posts', ['json' => [
-            'image' => '/api/images/1',
-            'createdBy' => '/api/users/12'
+        $response = static::createClient()->request('POST', '/api/messages', ['json' => [
+            'message' => 'test',
+            'sendAt' => '2022-02-24T15:03:03.140Z',
+            'sendBy' => '/api/users/12',
+            'recipient' => '/api/users/14'
         ]]);
 
         $this->assertResponseStatusCodeSame(201);
@@ -63,9 +64,11 @@ class ApiPostsTest extends ApiTestCase
         $jsonArray = json_decode($jsonContent,true);
         $id = $jsonArray["id"];
 
-        static::createClient()->request('PUT', "/api/posts/$id", ['json' => [
-            'image' => '/api/images/1',
-            'createdBy' => '/api/users/12'
+        static::createClient()->request('PUT', "/api/messages/$id", ['json' => [
+            'message' => 'testPUT',
+            'sendAt' => '2022-02-24T15:03:03.140Z',
+            'sendBy' => '/api/users/12',
+            'recipient' => '/api/users/14'
         ]]);
 
         $this->assertResponseStatusCodeSame(200);
@@ -74,7 +77,7 @@ class ApiPostsTest extends ApiTestCase
 
         // Delete the user we just created
 
-        static::createClient()->request('DELETE', "/api/posts/$id");
+        static::createClient()->request('DELETE', "/api/messages/$id");
 
     }
 }
