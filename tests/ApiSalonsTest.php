@@ -47,16 +47,22 @@ class ApiSalonsTest extends ApiTestCase
 
     public function testCreateSalon(): void
     {
-        $response = static::createClient()->request('POST', '/api/salons', [
-            'json' => [
-                'address' => '2 rue des poissonniers',
-                'zipCode' => '75017',
-                'city' => 'Paris',
-                'manager' => '/api/users/12',
-                'salonImage' => '/api/images/73'
-            ],
-            $this->addToken()
-        ]);
+
+        $responseImage = static::createClient()->request('POST', '/api/images', ['json' => [
+            'image' => 'https://www.neonmag.fr/imgre/fit/https.3A.2F.2Fi.2Epmdstatic.2Enet.2FNEO.2F2019.2F11.2F24.2F30e037d6-34a5-49ea-ac52-77b7e796342c.2Ejpeg/1170x658/background-color/ffffff/quality/90/7-tatouages-insolites-sur-la-langue.jpg',
+        ],$this->addToken()]);
+
+        $jsonContentImage = $responseImage->getContent();
+        $jsonArrayImage = json_decode($jsonContentImage,true);
+        $idImage = $jsonArrayImage["id"];
+
+        $response = static::createClient()->request('POST', '/api/salons', ['json' => [
+            'address' => '8 rue des poissonniers',
+            'zipCode' => '75017',
+            'city' => 'Paris',
+            'manager' => '/api/users/12',
+            'salonImage' => "/api/images/$idImage"
+        ]]);
 
         $this->assertResponseStatusCodeSame(201);
         $this->assertResponseHeaderSame('content-type', 'application/ld+json; charset=utf-8');
@@ -65,48 +71,47 @@ class ApiSalonsTest extends ApiTestCase
         $jsonArray = json_decode($jsonContent,true);
         $id = $jsonArray["id"];
         static::createClient()->request('DELETE', "/api/salons/$id",$this->addToken());
-
+        static::createClient()->request('DELETE', "/api/images/$idImage",$this->addToken());
     }
-    public function testPutUser(): void
+    public function testPutSalon(): void
     {
-        $response = static::createClient()->request('POST', '/api/salons', [
-            'json' => [
-                'address' => '2 rue des poissonniers',
-                'zipCode' => '75017',
-                'city' => 'Paris',
-                'manager' => '/api/users/12',
-                'salonImage' => '/api/images/74'
-            ],
-            $this->addToken()
-        ]);
+        $responseImage = static::createClient()->request('POST', '/api/images', ['json' => [
+            'image' => 'https://www.neonmag.fr/imgre/fit/https.3A.2F.2Fi.2Epmdstatic.2Enet.2FNEO.2F2019.2F11.2F24.2F30e037d6-34a5-49ea-ac52-77b7e796342c.2Ejpeg/1170x658/background-color/ffffff/quality/90/7-tatouages-insolites-sur-la-langue.jpg',
+        ]]);
+
+        $jsonContentImage = $responseImage->getContent();
+        $jsonArrayImage = json_decode($jsonContentImage,true);
+        $idImage = $jsonArrayImage["id"];
+
+        $response = static::createClient()->request('POST', '/api/salons', ['json' => [
+            'address' => '5 rue des poissonniers',
+            'zipCode' => '75017',
+            'city' => 'Paris',
+            'manager' => '/api/users/12',
+            'salonImage' => "/api/images/$idImage"
+        ],$this->addToken()]);
 
         $this->assertResponseStatusCodeSame(201);
         $this->assertResponseHeaderSame('content-type', 'application/ld+json; charset=utf-8');
 
         $jsonContent = $response->getContent();
-        print_r($jsonContent);
         $jsonArray = json_decode($jsonContent,true);
         $id = $jsonArray["id"];
 
-        static::createClient()->request('PUT', "/api/salons/$id", [
-            'json' => [
-                'address' => 'kjbi',
-                'zipCode' => '95000',
-                'city' => 'Cergy',
-                'manager' => '/api/users/12',
-                'salonImage' => '/api/images/75'
-            ],
-            $this->addToken()
-        ]);
+        static::createClient()->request('PUT', "/api/salons/$id", ['json' => [
+            'address' => 'kjbi',
+            'zipCode' => '95000',
+            'city' => 'Cergy',
+            'manager' => '/api/users/12',
+            'salonImage' => "/api/images/$idImage"
+        ],$this->addToken()]);
 
         $this->assertResponseStatusCodeSame(200);
         $this->assertResponseHeaderSame('content-type', 'application/ld+json; charset=utf-8');
 
 
         // Delete the user we just created
-
-        print_r($id);
-        $response = static::createClient()->request('DELETE', "/api/salons/$id",$this->addToken());
-
+        static::createClient()->request('DELETE', "/api/salons/$id",$this->addToken());
+        static::createClient()->request('DELETE', "/api/images/$idImage",$this->addToken());
     }
 }

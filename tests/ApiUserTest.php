@@ -62,10 +62,7 @@ class ApiUserTest extends ApiTestCase
         $jsonArray = json_decode($jsonContent,true);
         $id = $jsonArray["id"];
 
-
-        print_r($id);
         static::createClient()->request('DELETE', "/api/users/$id", $this->addToken());
-
     }
     public function testPutUser(): void
     {
@@ -100,6 +97,5 @@ class ApiUserTest extends ApiTestCase
 
         // Delete the user we just created
         static::createClient()->request('DELETE', "/api/users/$id",$this->addToken());
-
     }
 }

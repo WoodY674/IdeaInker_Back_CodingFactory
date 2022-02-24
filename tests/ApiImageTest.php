@@ -38,7 +38,7 @@ class ApiImageTest extends ApiTestCase
 
     }
 
-    public function testGetOneSalon(): void
+    public function testGetOneImage(): void
     {
         static::createClient()->request('GET', '/api/images/2', $this->addToken());
         //Assert that the returned response is 200
@@ -99,6 +99,5 @@ class ApiImageTest extends ApiTestCase
 
         // Delete the user we just created
         static::createClient()->request('DELETE', "/api/images/$id", $this->addToken());
-
     }
 }

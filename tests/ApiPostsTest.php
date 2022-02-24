@@ -36,7 +36,7 @@ class ApiPostsTest extends ApiTestCase
 
     }
 
-    public function testGetOneSalon(): void
+    public function testGetOnePost(): void
     {
         $response = static::createClient()->request('GET', '/api/posts/3', $this->addToken());
         //Assert that the returned response is 200
@@ -61,7 +61,7 @@ class ApiPostsTest extends ApiTestCase
         $jsonContent = $response->getContent();
         $jsonArray = json_decode($jsonContent,true);
         $id = $jsonArray["id"];
-        $response = static::createClient()->request('DELETE', "/api/posts/$id", $this->addToken());
+        static::createClient()->request('DELETE', "/api/posts/$id", $this->addToken());
 
     }
     public function testPutPost(): void
@@ -78,7 +78,7 @@ class ApiPostsTest extends ApiTestCase
         $jsonArray = json_decode($jsonContent,true);
         $id = $jsonArray["id"];
 
-        $response = static::createClient()->request('PUT', "/api/posts/$id", ['json' => [
+        static::createClient()->request('PUT', "/api/posts/$id", ['json' => [
             'image' => '/api/images/1',
             'createdBy' => '/api/users/12'
         ], $this->addToken()]);
@@ -88,7 +88,6 @@ class ApiPostsTest extends ApiTestCase
 
 
         // Delete the user we just created
-        $response = static::createClient()->request('DELETE', "/api/posts/$id",$this->addToken());
-
+        static::createClient()->request('DELETE', "/api/posts/$id",$this->addToken());
     }
 }

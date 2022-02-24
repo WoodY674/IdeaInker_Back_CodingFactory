@@ -59,14 +59,10 @@ class ApiMeetingTest extends ApiTestCase
         $this->assertResponseHeaderSame('content-type', 'application/ld+json; charset=utf-8');
 
         $jsonContent = $response->getContent();
-        print_r($jsonContent);
         $jsonArray = json_decode($jsonContent,true);
         $id = $jsonArray["id"];
 
-
-        print_r($id);
         static::createClient()->request('DELETE', "/api/meetings/$id",$this->addToken());
-
     }
     public function testPutMeeting(): void
     {
@@ -79,14 +75,11 @@ class ApiMeetingTest extends ApiTestCase
         ]);
 
         $jsonContent = $response->getContent();
-        print_r($jsonContent);
         $jsonArray = json_decode($jsonContent,true);
         $id = $jsonArray["id"];
 
         $this->assertResponseStatusCodeSame(201);
         $this->assertResponseHeaderSame('content-type', 'application/ld+json; charset=utf-8');
-
-
 
         static::createClient()->request('PUT', "/api/meetings/$id", [
             'json' => [
@@ -101,9 +94,7 @@ class ApiMeetingTest extends ApiTestCase
 
 
         // Delete the user we just created
-
         print_r($id);
         static::createClient()->request('DELETE', "/api/meetings/$id", $this->addToken());
-
     }
 }
