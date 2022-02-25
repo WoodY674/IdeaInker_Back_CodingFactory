@@ -9,9 +9,25 @@ use App\Entity\Message;
 
 class ApiMessagesTest extends ApiTestCase
 {
+    private function addToken()
+    {
+        $client = self::createClient();
+        // retrieve a token
+        $response = $client->request('POST', '/authentication_token', [
+            'headers' => ['Content-Type' => 'application/json'],
+            'json' => [
+                'email' => 'test1@test.com',
+                'password' => 'password',
+            ],
+        ]);
+
+        $json = $response->toArray();
+        return ['auth_bearer' => $json["token"]];
+    }
+
     public function testGetAllMessages(): void
     {
-        $response = static::createClient()->request('GET', '/api/messages');
+        $response = static::createClient()->request('GET', '/api/messages', $this->addToken());
         //Assert that the returned response is 200
         $this->assertResponseIsSuccessful();
         // Asserts that the returned content type is JSON-LD (the default)
@@ -21,7 +37,7 @@ class ApiMessagesTest extends ApiTestCase
 
     public function testGetOneMessage(): void
     {
-        $response = static::createClient()->request('GET', '/api/messages/1');
+        $response = static::createClient()->request('GET', '/api/messages/1',$this->addToken());
         //Assert that the returned response is 200
         $this->assertResponseIsSuccessful();
         // Asserts that the returned content type is JSON-LD (the default)
@@ -36,7 +52,7 @@ class ApiMessagesTest extends ApiTestCase
             'sendAt' => '2022-02-24T15:03:03.140Z',
             'sendBy' => '/api/users/12',
             'recipient' => '/api/users/14'
-        ]]);
+        ],$this->addToken()]);
 
         $this->assertResponseStatusCodeSame(201);
         $this->assertResponseHeaderSame('content-type', 'application/ld+json; charset=utf-8');
@@ -45,7 +61,7 @@ class ApiMessagesTest extends ApiTestCase
         $jsonArray = json_decode($jsonContent,true);
         $id = $jsonArray["id"];
 
-        static::createClient()->request('DELETE', "/api/messages/$id");
+        static::createClient()->request('DELETE', "/api/messages/$id",$this->addToken());
 
     }
     public function testPutMessages(): void
@@ -55,7 +71,7 @@ class ApiMessagesTest extends ApiTestCase
             'sendAt' => '2022-02-24T15:03:03.140Z',
             'sendBy' => '/api/users/12',
             'recipient' => '/api/users/14'
-        ]]);
+        ],$this->addToken()]);
 
         $this->assertResponseStatusCodeSame(201);
         $this->assertResponseHeaderSame('content-type', 'application/ld+json; charset=utf-8');
@@ -69,7 +85,7 @@ class ApiMessagesTest extends ApiTestCase
             'sendAt' => '2022-02-24T15:03:03.140Z',
             'sendBy' => '/api/users/12',
             'recipient' => '/api/users/14'
-        ]]);
+        ],$this->addToken()]);
 
         $this->assertResponseStatusCodeSame(200);
         $this->assertResponseHeaderSame('content-type', 'application/ld+json; charset=utf-8');
@@ -77,7 +93,7 @@ class ApiMessagesTest extends ApiTestCase
 
         // Delete the user we just created
 
-        static::createClient()->request('DELETE', "/api/messages/$id");
+        static::createClient()->request('DELETE', "/api/messages/$id",$this->addToken());
 
     }
 }

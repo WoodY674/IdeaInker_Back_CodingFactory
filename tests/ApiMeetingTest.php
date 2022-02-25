@@ -9,8 +9,7 @@ use App\Entity\User;
 
 class ApiMeetingTest extends ApiTestCase
 {
-    private function addToken()
-    {
+    private function addToken(){
         $client = self::createClient();
         // retrieve a token
         $response = $client->request('POST', '/authentication_token', [

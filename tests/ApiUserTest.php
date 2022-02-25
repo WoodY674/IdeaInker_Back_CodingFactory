@@ -96,6 +96,6 @@ class ApiUserTest extends ApiTestCase
 
 
         // Delete the user we just created
-        static::createClient()->request('DELETE', "/api/users/$id",$this->addToken());
+        static::createClient()->request('DELETE', "/api/users/$id", $this->addToken());
     }
 }
