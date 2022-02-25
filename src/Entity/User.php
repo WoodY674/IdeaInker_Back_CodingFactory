@@ -19,8 +19,7 @@ use ApiPlatform\Core\Annotation\ApiResource;
     collectionOperations: [
         "get",
         "post" => [
-            "security_post_denormalize" => "is_granted('CREATE', object)",
-            "security_message" => "Only auth user can create.",
+            "path" => "/register"
         ],
     ],
     itemOperations: [
@@ -37,7 +36,7 @@ use ApiPlatform\Core\Annotation\ApiResource;
             "security_message" => "Sorry, but you are not the user owner.",
         ],
     ],
-    attributes: ["security" => "is_granted('ROLE_USER')"]
+    //attributes: ["security" => "is_granted('ROLE_USER')"]
 )
 ]
 class User implements UserInterface, PasswordAuthenticatedUserInterface

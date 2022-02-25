@@ -52,12 +52,14 @@ class ApiUserTest extends ApiTestCase
 
     public function testCreateUser(): void
     {
-        $response = static::createClient()->request('POST', '/api/users', [
+        $response = static::createClient()->request('POST', '/api/register', [
             'json' => [
                 'email' => 'test1@test.com',
                 'password' => 'password'
             ],
-            $this->addToken()
+            'headers' => [
+                'content-type' => 'application/ld+json; charset=utf-8'
+            ]
         ]);
 
         $this->assertResponseStatusCodeSame(201);
