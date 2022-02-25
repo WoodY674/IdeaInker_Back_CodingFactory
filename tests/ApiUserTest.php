@@ -54,7 +54,7 @@ class ApiUserTest extends ApiTestCase
     {
         $response = static::createClient()->request('POST', '/api/register', [
             'json' => [
-                'email' => 'test1@test.com',
+                'email' => 'test4@test.com',
                 'password' => 'password'
             ],
             'headers' => [
