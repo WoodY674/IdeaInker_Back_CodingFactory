@@ -39,8 +39,8 @@ services:
   apache:
     image: 'bitnami/apache:latest'
     ports:
-      - '81:8081'
-      - '443:8443'
+      - '81:80'
+      - '8443:443'
     volumes:
       - /path/to/app
 
