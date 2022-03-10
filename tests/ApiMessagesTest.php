@@ -16,7 +16,7 @@ class ApiMessagesTest extends ApiTestCase
         $response = $client->request('POST', '/authentication_token', [
             'headers' => ['Content-Type' => 'application/json'],
             'json' => [
-                'email' => 'test1@test.com',
+                'email' => 'test4@test.com',
                 'password' => 'password',
             ],
         ]);

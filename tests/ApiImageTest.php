@@ -19,7 +19,7 @@ class ApiImageTest extends ApiTestCase
                 'Content-Type' => 'application/json'
             ],
             'json' => [
-                'email' => 'test1@test.com',
+                'email' => 'test4@test.com',
                 'password' => 'password',
             ],
         ]);
