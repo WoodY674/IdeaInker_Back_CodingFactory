@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Core\Annotation\ApiResource;
 use App\Repository\UserRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -13,6 +14,30 @@ use Symfony\Component\Security\Core\User\UserInterface;
 /**
  * @ORM\Entity(repositoryClass=UserRepository::class)
  */
+#[ApiResource(
+    collectionOperations: [
+        "get",
+        "post" => [
+            "path" => "/register"
+        ],
+    ],
+    itemOperations: [
+        "get" => [
+            "security" => "is_granted('READ', object)",
+            "security_message" => "Only auth user can access at this user.",
+        ],
+        "put" => [
+            "security" => "is_granted('EDIT', object)",
+            "security_message" => "Sorry, but you are not the user owner.",
+        ],
+        "delete" => [
+            "security" => "is_granted('DELETE', object)",
+            "security_message" => "Sorry, but you are not the user owner.",
+        ],
+    ],
+    //attributes: ["security" => "is_granted('ROLE_USER')"]
+)
+]
 class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
     /**
@@ -59,7 +84,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private $zipCode;
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * @ORM\Column(type="string", length=255, nullable=true)
      */
     private $city;
 
@@ -92,7 +117,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     /**
      * @ORM\OneToOne(targetEntity=Image::class, cascade={"persist", "remove"})
      */
-    private $ProfileImage;
+    private $profileImage;
 
     /**
      * @ORM\OneToMany(targetEntity=Post::class, mappedBy="createdBy")
@@ -353,12 +378,12 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     public function getProfileImage(): ?Image
     {
-        return $this->ProfileImage;
+        return $this->profileImage;
     }
 
-    public function setProfileImage(?Image $ProfileImage): self
+    public function setProfileImage(?Image $profileImage): self
     {
-        $this->ProfileImage = $ProfileImage;
+        $this->profileImage = $profileImage;
 
         return $this;
     }
