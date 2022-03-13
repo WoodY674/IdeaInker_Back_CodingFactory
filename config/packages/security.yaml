@@ -23,6 +23,7 @@ security:
             # stateless: true
             # provider: app_user_provider
             # jwt: ~
+
         main:
             stateless: true
             provider: app_user_provider
