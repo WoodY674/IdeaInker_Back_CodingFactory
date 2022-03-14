@@ -3,11 +3,15 @@
 namespace App\Entity;
 
 use ApiPlatform\Core\Annotation\ApiResource;
+use DateTimeImmutable;
+use Symfony\Component\HttpFoundation\File\File;
+use Vich\UploaderBundle\Mapping\Annotation as Vich;
 use App\Repository\ImageRepository;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity(repositoryClass=ImageRepository::class)
+ * @Vich\Uploadable
  */
 #[ApiResource(
     itemOperations: [
@@ -33,27 +37,67 @@ class Image
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
      */
-    private $id;
+    private ?int $id;
+
+    /**
+     * @var File
+     * @Vich\UploadableField(mapping="post_image", fileNameProperty="imageName")
+     */
+    private File $imageFile;
 
     /**
      * @ORM\Column(type="string", length=255)
      */
-    private $image;
+    private ?string $imageName;
+
+    /**
+     * @ORM\Column(type="datetime_immutable", nullable=true)
+     * @var DateTimeImmutable
+     */
+    private DateTimeImmutable $updatedAt;
 
     public function getId(): ?int
     {
         return $this->id;
     }
 
-    public function getImage(): ?string
+    /**
+     * @return File
+     */
+    public function getImageFile(): File
     {
-        return $this->image;
+        return $this->imageFile;
     }
 
-    public function setImage(string $image): self
+    /**
+     * @param File $imageFile
+     * @return Image
+     */
+    public function setImageFile(File $imageFile): self
     {
-        $this->image = $image;
+        $this->imageFile = $imageFile;
+
+        // if 'updatedAt' is not defined in your entity, use another property
+        $this->updatedAt = new DateTimeImmutable('now');
 
         return $this;
     }
+
+    public function getImageName(): ?string
+    {
+        return $this->imageName;
+    }
+
+    public function setImageName(string $imageName): self
+    {
+        $this->imageName = $imageName;
+
+        return $this;
+    }
+
+    public function getUpdateAt(): DateTimeImmutable
+    {
+        return $this->updatedAt;
+    }
+
 }

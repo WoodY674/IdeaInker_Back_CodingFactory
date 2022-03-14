@@ -25,7 +25,29 @@ use Gedmo\Mapping\Annotation as Gedmo;
             "security" => "is_granted('DELETE', object)",
             "security_message" => "Sorry, but you are not the post owner.",
         ],
-
+        "image" => [
+            "method" => 'POST',
+            "path" => "/posts/{id}/image",
+            "deserialize" => false,
+            "controller" => ImageController::class,
+            "openapi_context" => [
+                "requestBody" => [
+                    "content" => [
+                        "multipart/form-data" => [
+                            "schema" => [
+                                "type" => "object",
+                                "properties" => [
+                                    "file" => [
+                                        "type" => "string",
+                                        "format" => "binary"
+                                    ]
+                                ]
+                            ]
+                        ]
+                    ]
+                ]
+            ]
+        ]
     ],
 )
 ]
@@ -65,6 +87,11 @@ class Post
      * @ORM\JoinColumn(nullable=false)
      */
     private $image;
+
+    /**
+     * @var string|null
+     */
+    private ?string $imagePath;
 
     /**
      * @ORM\ManyToOne(targetEntity=User::class, inversedBy="posts")
@@ -147,5 +174,21 @@ class Post
         $this->createdBy = $createdBy;
 
         return $this;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getImagePath(): ?string
+    {
+        return $this->imagePath;
+    }
+
+    /**
+     * @param string|null $imagePath
+     */
+    public function setImagePath(?string $imagePath): void
+    {
+        $this->imagePath = $imagePath;
     }
 }
