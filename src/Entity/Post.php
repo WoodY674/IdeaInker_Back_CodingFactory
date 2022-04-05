@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use ApiPlatform\Core\Annotation\ApiResource;
+use App\Controller\EmptyController;
 use App\Controller\ImageController;
 use App\Repository\PostRepository;
 use Doctrine\ORM\Mapping as ORM;
@@ -12,24 +13,11 @@ use Gedmo\Mapping\Annotation as Gedmo;
  * @ORM\Entity(repositoryClass=PostRepository::class)
  */
 #[ApiResource(
-    itemOperations: [
-        "get" => [
-            "security" => "is_granted('READ', object)",
-            "security_message" => "Only auth user can access at this post.",
-        ],
-        "put" => [
-            "security" => "is_granted('EDIT', object)",
-            "security_message" => "Sorry, but you are not the post owner.",
-        ],
-        "delete" => [
-            "security" => "is_granted('DELETE', object)",
-            "security_message" => "Sorry, but you are not the post owner.",
-        ],
-        "image" => [
-            "method" => 'POST',
-            "path" => "/posts/{id}/image",
+    collectionOperations: [
+        "get",
+        "post" => [
+            "controller" => EmptyController::class,
             "deserialize" => false,
-            "controller" => ImageController::class,
             "openapi_context" => [
                 "requestBody" => [
                     "content" => [
@@ -48,6 +36,20 @@ use Gedmo\Mapping\Annotation as Gedmo;
                 ]
             ]
         ]
+    ],
+    itemOperations: [
+        "get" => [
+            "security" => "is_granted('READ', object)",
+            "security_message" => "Only auth user can access at this post.",
+        ],
+        "put" => [
+            "security" => "is_granted('EDIT', object)",
+            "security_message" => "Sorry, but you are not the post owner.",
+        ],
+        "delete" => [
+            "security" => "is_granted('DELETE', object)",
+            "security_message" => "Sorry, but you are not the post owner.",
+        ],
     ],
 )
 ]
