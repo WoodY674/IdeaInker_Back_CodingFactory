@@ -114,14 +114,17 @@ class Salon
     /**
      * @ORM\Column(type="string", length=255)
      */
+    #[
+        Groups(['read:Salon:collection', 'write:Salon'])
+    ]
     private $latitude;
 
-    #[
-        Groups(['read:Salon', 'write:Salon'])
-    ]
     /**
      * @ORM\Column(type="string", length=255)
      */
+    #[
+        Groups(['read:Salon:collection', 'write:Salon'])
+    ]
     private $longitude;
 
 
