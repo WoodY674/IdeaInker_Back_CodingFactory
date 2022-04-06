@@ -55,11 +55,6 @@ class CoordinateStore
      */
     private $longitude;
 
-    /**
-     * @ORM\OneToOne(targetEntity=Salon::class, inversedBy="coordinateStore", cascade={"persist", "remove"})
-    */
-    private $salon;
-
     public function getId(): ?int
     {
         return $this->id;
@@ -109,18 +104,6 @@ class CoordinateStore
     public function setLongitude(string $longitude): self
     {
         $this->longitude = $longitude;
-
-        return $this;
-    }
-
-    public function getSalon(): ?Salon
-    {
-        return $this->salon;
-    }
-
-    public function setSalon(?Salon $salon): self
-    {
-        $this->salon = $salon;
 
         return $this;
     }

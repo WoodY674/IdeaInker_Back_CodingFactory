@@ -112,13 +112,31 @@ class Salon
     private $deletedAt;
 
     /**
-     * @ORM\OneToOne(targetEntity=CoordinateStore::class, mappedBy="salon", cascade={"persist", "remove"})
+     * @ORM\Column(type="string", length=255)
      */
+    private $latitude;
+
     #[
-        Groups(['read:Salon:collection', 'write:Salon']),
-        Valid()
+        Groups(['read:Salon', 'write:Salon'])
     ]
-    private $coordinateStore;
+    /**
+     * @ORM\Column(type="string", length=255)
+     */
+    private $longitude;
+
+
+
+    public function getName(): ?string
+    {
+        return $this->name;
+    }
+
+    public function setName(string $name): self
+    {
+        $this->name = $name;
+
+        return $this;
+    }
 
     public function getId(): ?int
     {
@@ -221,37 +239,28 @@ class Salon
         return $this;
     }
 
-    public function getCoordinateStore(): ?CoordinateStore
+    public function getLatitude(): ?string
     {
-        return $this->coordinateStore;
+        return $this->latitude;
     }
 
-    public function setCoordinateStore(?CoordinateStore $coordinateStore): self
+    public function setLatitude(string $latitude): self
     {
-        // unset the owning side of the relation if necessary
-        if ($coordinateStore === null && $this->coordinateStore !== null) {
-            $this->coordinateStore->setSalon(null);
-        }
-
-        // set the owning side of the relation if necessary
-        if ($coordinateStore !== null && $coordinateStore->getSalon() !== $this) {
-            $coordinateStore->setSalon($this);
-        }
-
-        $this->coordinateStore = $coordinateStore;
+        $this->latitude = $latitude;
 
         return $this;
     }
 
-    public function getName(): ?string
+    public function getLongitude(): ?string
     {
-        return $this->name;
+        return $this->longitude;
     }
 
-    public function setName(string $name): self
+    public function setLongitude(string $longitude): self
     {
-        $this->name = $name;
+        $this->longitude = $longitude;
 
         return $this;
     }
+
 }
