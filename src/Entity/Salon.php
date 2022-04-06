@@ -6,6 +6,9 @@ use ApiPlatform\Core\Annotation\ApiResource;
 use App\Repository\SalonRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
+use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Component\Validator\Constraints\Length;
+use Symfony\Component\Validator\Constraints\Valid;
 
 /**
  * @ORM\Entity(repositoryClass=SalonRepository::class)
@@ -13,26 +16,30 @@ use Gedmo\Mapping\Annotation as Gedmo;
 #[ApiResource(
     collectionOperations: [
         "get",
-        "post" => [
-            "security_post_denormalize" => "is_granted('CREATE', object)",
-            "security_message" => "Only auth user can create.",
-        ],
+        "post"
     ],
     itemOperations: [
         "get" => [
-            "security" => "is_granted('READ', object)",
-            "security_message" => "Only auth user can access at this salon.",
+            'normalization_context' => ['groups' => ['read:Salon:collection', 'read:Salon:item', 'read:Salon:User']],
+            //"security" => "is_granted('READ', object)",
+            //"security_message" => "Only auth user can access at this salon.",
         ],
         "put" => [
-            "security" => "is_granted('EDIT', object)",
-            "security_message" => "Sorry, but you are not the salon owner.",
+            //"security" => "is_granted('EDIT', object)",
+            //"security_message" => "Sorry, but you are not the salon owner.",
         ],
         "delete" => [
-            "security" => "is_granted('DELETE', object)",
-            "security_message" => "Sorry, but you are not the salon owner.",
+            //"security" => "is_granted('DELETE', object)",
+            //"security_message" => "Sorry, but you are not the salon owner.",
         ],
     ],
-    attributes: ["security" => "is_granted('ROLE_USER')"]
+    denormalizationContext: [
+        ['groups' => ['write:Salon']],
+    ],
+    normalizationContext: [
+        'groups' => ['read:Salon:collection']
+    ],
+
 )
 ]
 class Salon
@@ -42,39 +49,55 @@ class Salon
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
      */
+    #[Groups(['read:Salon:collection'])]
     private $id;
 
     /**
      * @ORM\Column(type="string", length=255)
      */
+    #[
+        Groups(['read:Salon:collection', 'write:Salon']),
+        Length(min: 3)
+    ]
+    private $name;
+
+    /**
+     * @ORM\Column(type="string", length=255)
+     */
+    #[Groups(['read:Salon:collection', 'write:Salon'])]
     private $address;
 
     /**
      * @ORM\Column(type="string", length=15)
      */
+    #[Groups(['read:Salon:collection', 'write:Salon'])]
     private $zipCode;
 
     /**
      * @ORM\Column(type="string", length=255)
      */
+    #[Groups(['read:Salon:collection', 'write:Salon'])]
     private $city;
 
     /**
      * @ORM\ManyToOne(targetEntity=User::class, inversedBy="salos")
-     * @ORM\JoinColumn(nullable=false)
+     * @ORM\JoinColumn(nullable=true)
      */
+    #[Groups(['read:Salon:collection', 'write:Salon'])]
     private $manager;
 
     /**
      * @ORM\OneToOne(targetEntity=Image::class, cascade={"persist", "remove"})
-     * @ORM\JoinColumn(nullable=false)
+     * @ORM\JoinColumn(nullable=true)
      */
+    #[Groups(['read:Salon:collection', 'write:Salon'])]
     private $salonImage;
 
     /**
      * @ORM\Column(type="datetime_immutable")
      * @Gedmo\Timestampable(on="create")
      */
+    #[Groups(['read:Salon:collection'])]
     private $createdAt;
 
     /**
@@ -87,6 +110,15 @@ class Salon
      * @ORM\Column(type="datetime_immutable", nullable=true)
      */
     private $deletedAt;
+
+    /**
+     * @ORM\OneToOne(targetEntity=CoordinateStore::class, mappedBy="salon", cascade={"persist", "remove"})
+     */
+    #[
+        Groups(['read:Salon:collection', 'write:Salon']),
+        Valid()
+    ]
+    private $coordinateStore;
 
     public function getId(): ?int
     {
@@ -185,6 +217,40 @@ class Salon
     public function setDeletedAt(?\DateTimeImmutable $deletedAt): self
     {
         $this->deletedAt = $deletedAt;
+
+        return $this;
+    }
+
+    public function getCoordinateStore(): ?CoordinateStore
+    {
+        return $this->coordinateStore;
+    }
+
+    public function setCoordinateStore(?CoordinateStore $coordinateStore): self
+    {
+        // unset the owning side of the relation if necessary
+        if ($coordinateStore === null && $this->coordinateStore !== null) {
+            $this->coordinateStore->setSalon(null);
+        }
+
+        // set the owning side of the relation if necessary
+        if ($coordinateStore !== null && $coordinateStore->getSalon() !== $this) {
+            $coordinateStore->setSalon($this);
+        }
+
+        $this->coordinateStore = $coordinateStore;
+
+        return $this;
+    }
+
+    public function getName(): ?string
+    {
+        return $this->name;
+    }
+
+    public function setName(string $name): self
+    {
+        $this->name = $name;
 
         return $this;
     }

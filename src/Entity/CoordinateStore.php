@@ -5,6 +5,8 @@ namespace App\Entity;
 use ApiPlatform\Core\Annotation\ApiResource;
 use App\Repository\CoordinateStoreRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Component\Validator\Constraints\Length;
 
 /**
  * @ORM\Entity(repositoryClass=CoordinateStoreRepository::class)
@@ -22,22 +24,41 @@ class CoordinateStore
     /**
      * @ORM\Column(type="string", length=255)
      */
+    #[
+        Groups(['read:Salon', 'write:Salon']),
+        Length(min: 3)
+
+    ]
     private $company;
 
+    #[
+        Groups(['read:Salon', 'write:Salon'])
+    ]
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
      */
     private $description;
 
+    #[
+        Groups(['read:Salon', 'write:Salon'])
+    ]
     /**
      * @ORM\Column(type="string", length=255)
      */
     private $latitude;
 
+    #[
+        Groups(['read:Salon', 'write:Salon'])
+    ]
     /**
      * @ORM\Column(type="string", length=255)
      */
     private $longitude;
+
+    /**
+     * @ORM\OneToOne(targetEntity=Salon::class, inversedBy="coordinateStore", cascade={"persist", "remove"})
+    */
+    private $salon;
 
     public function getId(): ?int
     {
@@ -88,6 +109,18 @@ class CoordinateStore
     public function setLongitude(string $longitude): self
     {
         $this->longitude = $longitude;
+
+        return $this;
+    }
+
+    public function getSalon(): ?Salon
+    {
+        return $this->salon;
+    }
+
+    public function setSalon(?Salon $salon): self
+    {
+        $this->salon = $salon;
 
         return $this;
     }

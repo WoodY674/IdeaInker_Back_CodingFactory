@@ -10,6 +10,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
  * @ORM\Entity(repositoryClass=UserRepository::class)
@@ -23,16 +24,16 @@ use Symfony\Component\Security\Core\User\UserInterface;
     ],
     itemOperations: [
         "get" => [
-            "security" => "is_granted('READ', object)",
-            "security_message" => "Only auth user can access at this user.",
+            //"security" => "is_granted('READ', object)",
+            //"security_message" => "Only auth user can access at this user.",
         ],
         "put" => [
-            "security" => "is_granted('EDIT', object)",
-            "security_message" => "Sorry, but you are not the user owner.",
+            //"security" => "is_granted('EDIT', object)",
+            //"security_message" => "Sorry, but you are not the user owner.",
         ],
         "delete" => [
-            "security" => "is_granted('DELETE', object)",
-            "security_message" => "Sorry, but you are not the user owner.",
+            //"security" => "is_granted('DELETE', object)",
+            //"security_message" => "Sorry, but you are not the user owner.",
         ],
     ],
     //attributes: ["security" => "is_granted('ROLE_USER')"]
@@ -45,6 +46,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
      */
+    #[Groups(['read:Post:User'])]
     private $id;
 
     /**
@@ -123,6 +125,12 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      * @ORM\OneToMany(targetEntity=Post::class, mappedBy="createdBy")
      */
     private $posts;
+
+    /**
+     * @ORM\Column(type="string", length=255)
+     */
+    #[Groups(['read:Post:User'])]
+    private $pseudo;
 
     public function __construct()
     {
@@ -414,6 +422,18 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
                 $post->setCreatedBy(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getPseudo(): ?string
+    {
+        return $this->pseudo;
+    }
+
+    public function setPseudo(string $pseudo): self
+    {
+        $this->pseudo = $pseudo;
 
         return $this;
     }

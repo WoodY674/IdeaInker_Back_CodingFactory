@@ -8,6 +8,8 @@ use App\Controller\ImageController;
 use App\Repository\PostRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
+use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Component\Validator\Constraints\Length;
 
 /**
  * @ORM\Entity(repositoryClass=PostRepository::class)
@@ -39,18 +41,27 @@ use Gedmo\Mapping\Annotation as Gedmo;
     ],
     itemOperations: [
         "get" => [
-            "security" => "is_granted('READ', object)",
-            "security_message" => "Only auth user can access at this post.",
+            'normalization_context' => ['groups' => ['read:Post:collection', 'read:Post:item', 'read:Post:User']],
+            //"security" => "is_granted('READ', object)",
+            //"security_message" => "Only auth user can access at this post.",
         ],
         "put" => [
-            "security" => "is_granted('EDIT', object)",
-            "security_message" => "Sorry, but you are not the post owner.",
+            //"security" => "is_granted('EDIT', object)",
+            //"security_message" => "Sorry, but you are not the post owner.",
         ],
         "delete" => [
-            "security" => "is_granted('DELETE', object)",
-            "security_message" => "Sorry, but you are not the post owner.",
+            //"security" => "is_granted('DELETE', object)",
+            //"security_message" => "Sorry, but you are not the post owner.",
         ],
     ],
+    denormalizationContext: [
+        ['groups' => ['write:Post']],
+    ],
+    normalizationContext: [
+        'groups' => ['read:Post:collection']
+    ],
+    paginationItemsPerPage: 10,
+    paginationMaximumItemsPerPage: 10
 )
 ]
 class Post
@@ -60,23 +71,30 @@ class Post
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
      */
+    #[Groups(['read:Post:collection'])]
     private $id;
 
     /**
      * @ORM\Column(type="text", nullable=true)
      */
+    #[
+        Groups(['read:Post:collection', 'write:Post']),
+        Length(min: 3)
+    ]
     private $content;
 
     /**
      * @ORM\Column(type="datetime_immutable")
      * @Gedmo\Timestampable(on="create")
      */
+    #[Groups(['read:Post:collection'])]
     private $createdAt;
 
     /**
      * @ORM\Column(type="datetime_immutable", nullable=true)
      * @Gedmo\Timestampable(on="update")
      */
+    #[Groups(['read:Post:item'])]
     private $updateAt;
 
     /**
@@ -88,17 +106,20 @@ class Post
      * @ORM\ManyToOne(targetEntity=Image::class)
      * @ORM\JoinColumn(nullable=false)
      */
+    #[Groups(['read:Post:collection', 'write:Post'])]
     private $image;
 
     /**
      * @var string|null
      */
+    #[Groups(['read:Post:collection'])]
     private ?string $imagePath;
 
     /**
      * @ORM\ManyToOne(targetEntity=User::class, inversedBy="posts")
      * @ORM\JoinColumn(nullable=false)
      */
+    #[Groups(['read:Post:collection'])]
     private $createdBy;
 
     public function getId(): ?int

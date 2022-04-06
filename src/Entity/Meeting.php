@@ -14,22 +14,22 @@ use Gedmo\Mapping\Annotation as Gedmo;
     collectionOperations: [
         "get",
         "post" => [
-            "security_post_denormalize" => "is_granted('CREATE', object)",
-            "security_message" => "Only auth user can create.",
+            //"security_post_denormalize" => "is_granted('CREATE', object)",
+            //"security_message" => "Only auth user can create.",
         ],
     ],
     itemOperations: [
         "get" => [
-            "security" => "is_granted('READ', object)",
-            "security_message" => "Only auth user can access at this meeting.",
+            //"security" => "is_granted('READ', object)",
+            //"security_message" => "Only auth user can access at this meeting.",
         ],
         "put" => [
-            "security" => "is_granted('EDIT', object)",
-            "security_message" => "Sorry, but you are not the meeting owner.",
+            //"security" => "is_granted('EDIT', object)",
+            //"security_message" => "Sorry, but you are not the meeting owner.",
         ],
         "delete" => [
-            "security" => "is_granted('DELETE', object)",
-            "security_message" => "Sorry, but you are not the meeting owner.",
+            //"security" => "is_granted('DELETE', object)",
+            //"security_message" => "Sorry, but you are not the meeting owner.",
         ],
     ],
     attributes: ["security" => "is_granted('ROLE_USER')"]
