@@ -9,6 +9,7 @@ use Symfony\Component\Routing\Annotation\Route;
 #[Route('/api2', name: 'api_')]
 class ApiController extends AbstractController
 {
+    /*
     #[Route('/', name: 'api')]
     public function index(): Response
     {
@@ -53,5 +54,5 @@ class ApiController extends AbstractController
         return $this->render('api/index.html.twig', [
             'api_route' => $route,
         ]);
-    }
+    }*/
 }

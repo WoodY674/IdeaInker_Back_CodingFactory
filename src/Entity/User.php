@@ -2,7 +2,9 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Core\Action\NotFoundAction;
 use ApiPlatform\Core\Annotation\ApiResource;
+use App\Controller\MeController;
 use App\Repository\UserRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -17,25 +19,33 @@ use Symfony\Component\Serializer\Annotation\Groups;
  */
 #[ApiResource(
     collectionOperations: [
-        "get",
+        "me" => [
+            'pagination_enable' => false,
+            'path' => '/me',
+            'method' => 'get',
+            'controller' => MeController::class,
+            'read' => false,
+            'openapi_context' => [
+                'security' => [['bearerAuth' => []]]
+            ],
+
+        ],
         "post" => [
             "path" => "/register"
         ],
     ],
     itemOperations: [
         "get" => [
+            'controller' => NotFoundAction::class,
+            'openapi_context' => ['summary' => 'hidden'],
+            'read' => false,
+            'output' => false
             //"security" => "is_granted('READ', object)",
             //"security_message" => "Only auth user can access at this user.",
         ],
-        "put" => [
-            //"security" => "is_granted('EDIT', object)",
-            //"security_message" => "Sorry, but you are not the user owner.",
-        ],
-        "delete" => [
-            //"security" => "is_granted('DELETE', object)",
-            //"security_message" => "Sorry, but you are not the user owner.",
-        ],
     ],
+    normalizationContext: ['read:User:collection'],
+    security: 'is_granted("ROLE_USER")'
     //attributes: ["security" => "is_granted('ROLE_USER')"]
 )
 ]
@@ -46,17 +56,19 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
      */
-    #[Groups(['read:Post:User'])]
+    #[Groups(['read:User:collection'])]
     private $id;
 
     /**
      * @ORM\Column(type="string", length=180, unique=true)
      */
+    #[Groups(['read:User:collection'])]
     private $email;
 
     /**
      * @ORM\Column(type="json")
      */
+    #[Groups(['read:User:collection'])]
     private $roles = [];
 
     /**
