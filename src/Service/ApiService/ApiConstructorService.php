@@ -161,21 +161,5 @@ class ApiConstructorService {
             $this->entityManager->persist($images);
         }
     }
-
-    private function getFileInRequest(Request $request): array {
-        $files = [];
-
-        if (!empty($request->files)) {
-            foreach ($request->files as $key => $file) {
-                //array_push($data[$key], $file);
-                //dd($key);
-                //$data[$key] = array_merge_recursive($data, $file);
-                $files['files'][$key] = $file;
-            }
-        }
-
-        return $files;
-    }
     // endregion
-
 }
