@@ -35,17 +35,10 @@ use Symfony\Component\Serializer\Annotation\Groups;
         ],
     ],
     itemOperations: [
-        "get" => [
-            'controller' => NotFoundAction::class,
-            'openapi_context' => ['summary' => 'hidden'],
-            'read' => false,
-            'output' => false
-            //"security" => "is_granted('READ', object)",
-            //"security_message" => "Only auth user can access at this user.",
-        ],
+        "get"
     ],
     normalizationContext: ['read:User:collection'],
-    security: 'is_granted("ROLE_USER")'
+    //security: 'is_granted("ROLE_USER")'
     //attributes: ["security" => "is_granted('ROLE_USER')"]
 )
 ]

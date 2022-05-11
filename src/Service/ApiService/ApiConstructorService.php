@@ -2,6 +2,12 @@
 
 namespace App\Service\ApiService;
 
+use App\Entity\Image;
+use App\Entity\Post;
+use App\Service\ImageService\ImageCreatorService;
+use App\Service\MetadataService\MetadataService;
+use Doctrine\ORM\EntityManagerInterface;
+use Metadata\MetadataFactory;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Serializer\Encoder\JsonEncoder;
@@ -9,7 +15,19 @@ use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
 use Symfony\Component\Serializer\Serializer;
 
 class ApiConstructorService {
+    private ImageCreatorService $imageCreatorService;
+    private MetadataService $metadataService;
+    private EntityManagerInterface $entityManager;
+    private FillEntity $fillEntity;
 
+    public function __construct(ImageCreatorService $imageCreatorService, EntityManagerInterface $entityManager,
+                                MetadataService $metadataService, FillEntity $fillEntity)
+    {
+        $this->imageCreatorService = $imageCreatorService;
+        $this->entityManager = $entityManager;
+        $this->metadataService = $metadataService;
+        $this->fillEntity = $fillEntity;
+    }
     // region Serializer
 
     // for VisualStudio style
@@ -92,22 +110,56 @@ class ApiConstructorService {
         $uploadApiModel = null;
         if ($request->headers->get('Content-Type') === 'application/json') {
             if (isset($targetEntity)) {
-                $uploadApiModel = $this->getSerializer()->deserialize(
-                    $request->getContent(),
-                    $targetEntity,
-                    'json'
-                );
+                //mapping data with json Whith METADATA
+                $data = json_decode($request->getContent(), true);
+                $uploadApiModel = $this->mappingRelation($targetEntity, $data);
 
-                dd($uploadApiModel);
+                return $uploadApiModel;
             } else {
                 dd("is empty");
                 //ToDo: aucune entity à été renseigné donc l'entity ne se remplira pas automatiquement
             }
         } else {
-            $data['files'] = $this->getFileInRequest($request);
+            dd($uploadApiModel);
         }
-        dd($uploadApiModel);
         return json_decode($request->getContent(), true);
+    }
+
+    private function mappingRelation($entity, $data) {
+        $metadata = $this->metadataService->getMetadata($entity);
+        $associationInput = $metadata->getAssociationMappings();
+
+        foreach ($data as $key => $value) {
+            if (key_exists($key, $associationInput)) {
+                if ($associationInput[$key]['targetEntity'] === Image::class) {
+                    $data[$key] = $this->extractFile64($value);
+                } else {
+                    $relationEntity = $this->entityManager->getRepository($associationInput[$key]['targetEntity'])->findOneBy(['id' => $value]);
+                    if(!isset($relationEntity)) {
+                        continue;
+                    }
+                    $data[$key] = $relationEntity;
+                }
+            }
+        }
+        return $this->fillEntity->fillEntity($entity, $data);
+    }
+
+    private function extractFile64($data){
+        $images = $this->imageCreatorService->convertImages64ToEntity($data);
+        $this->persistImage($images);
+        $this->entityManager->flush();
+        return $images;
+    }
+
+    private function persistImage($images) {
+        if (is_array($images)) {
+            foreach ($images as $image) {
+                $this->entityManager->persist($image);
+            }
+        } else {
+            $this->entityManager->persist($images);
+        }
     }
 
     private function getFileInRequest(Request $request): array {

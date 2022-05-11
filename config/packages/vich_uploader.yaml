@@ -3,6 +3,6 @@ vich_uploader:
 
     mappings:
         post_image:
-            uri_prefix: assets/img/posts_images
-            upload_destination: '%kernel.project_dir%/public/assets/img/posts_images'
+            uri_prefix: assets/img/posting_image
+            upload_destination: '%kernel.project_dir%/public/assets/img/posting_image'
             namer: Vich\UploaderBundle\Naming\OrignameNamer

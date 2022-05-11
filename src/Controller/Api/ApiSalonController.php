@@ -2,13 +2,13 @@
 
 namespace App\Controller\Api;
 
-use App\Entity\Image;
 use App\Entity\Salon;
 use App\Repository\SalonRepository;
 use App\Repository\UserRepository;
 use App\Service\ApiService\ApiConstructorService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
@@ -46,33 +46,13 @@ class ApiSalonController extends AbstractController
     }
 
     #[Route('/', name: 'salon_new', methods: ['POST'])]
-    public function newSalon(): Response
+    public function newSalon(Request $request): Response
     {
         try {
-            $response = $this->apiService->getJsonBodyFromRequest();
-            if (!empty($request)) {
-                throw new \Exception();
-            }
-            $user = $this->userRepository->findOneBy(['id' => $response['manager'],'deletedAt' => null]);
-            if (!$user) {
-                throw new \Exception();
-            }
-
-            $image = new Image();
-            $image->setImage($response['image']);
-            $this->entityManager->persist($image);
-
-            $salon = new Salon();
-            $salon->setAddress($response['address']);
-            $salon->setCity($response['city']);
-            $salon->setZipCode($response['zipCode']);
-            $salon->setManager($user);
-            $salon->setSalonImage($image);
-
+            $salon = $this->apiService->getJsonBodyFromRequest($request, Salon::class);
             $this->entityManager->persist($salon);
             $this->entityManager->flush();
-
-            return $this->apiService->getResponseForApi($user);
+            return $this->json($salon);
         } catch (\Exception $exception) {
             return $this->apiService->getResponseForApi("Data no valid or user not found")->setStatusCode(422);
         }

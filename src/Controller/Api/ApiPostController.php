@@ -4,14 +4,19 @@ namespace App\Controller\Api;
 
 use App\Entity\Image;
 use App\Entity\Post;
+use App\Form\PostType;
 use App\Repository\PostRepository;
 use App\Repository\UserRepository;
 use App\Service\ApiService\ApiConstructorService;
+use App\Service\ImageService\ImageCreatorService;
 use Doctrine\ORM\EntityManagerInterface;
+use Metadata\MetadataFactory;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 #[Route('/api2/post')]
 class ApiPostController extends AbstractController
@@ -21,17 +26,20 @@ class ApiPostController extends AbstractController
     private PostRepository $postRepository;
     private UserRepository $userRepository;
     private ApiConstructorService $apiService;
+    private ValidatorInterface $validator;
 
     public function __construct(
         PostRepository         $postRepository,
         UserRepository         $userRepository,
         EntityManagerInterface $entityManager,
-        ApiConstructorService  $apiService)
+        ApiConstructorService  $apiService,
+        ValidatorInterface $validator)
     {
         $this->postRepository = $postRepository;
         $this->entityManager = $entityManager;
         $this->apiService = $apiService;
         $this->userRepository = $userRepository;
+        $this->validator = $validator;
     }
 
     #[Route('/', name: 'post_all', methods: ['GET'])]
@@ -49,34 +57,10 @@ class ApiPostController extends AbstractController
 
     #[Route('/', name: 'post_new', methods: ['POST'])]
     public function newPost(Request $request): Response {
-        $response = $this->apiService->getJsonBodyFromRequest($request);
-
-        try {
-            $response = $this->apiService->getJsonBodyFromRequest($request);
-            if (!empty($request)) {
-                throw new \Exception();
-            }
-            $user = $this->userRepository->findOneBy(['id' => $response['userId'],'deletedAt' => null]);
-            if (!$user) {
-                throw new \Exception();
-            }
-            $image = new Image();
-            $image->setImage($response['image']);
-            $this->entityManager->persist($image);
-
-            $post = new Post();
-            $post->setContent($response['content']);
-            $post->setImage($image);
-            $post->setCreatedBy($user);
-
-            $this->entityManager->persist($post);
-
-            $this->entityManager->flush();
-
-            return $this->apiService->getResponseForApi($user);
-        } catch (\Exception $exception) {
-            return $this->apiService->getResponseForApi("Data no valid or user not found")->setStatusCode(422);
-        }
+        $post = $this->apiService->getJsonBodyFromRequest($request, Post::class);
+        $this->entityManager->persist($post);
+        $this->entityManager->flush();
+        return $this->json($post);
     }
 
     #[Route('/{id}', name: 'post_replace', methods: ['PUT'])]

@@ -40,10 +40,10 @@ class Image
     private ?int $id;
 
     /**
-     * @var File
+     * @var ?File
      * @Vich\UploadableField(mapping="post_image", fileNameProperty="imageName")
      */
-    private File $imageFile;
+    private ?File $imageFile;
 
     /**
      * @ORM\Column(type="string", length=255)
@@ -55,6 +55,11 @@ class Image
      * @var DateTimeImmutable
      */
     private DateTimeImmutable $updatedAt;
+
+    /**
+     * @ORM\Column(type="string", length=255)
+     */
+    private $imagePath;
 
     public function getId(): ?int
     {
@@ -88,16 +93,24 @@ class Image
         return $this->imageName;
     }
 
-    public function setImageName(string $imageName): self
-    {
+    public function setImageName(string $imageName): self {
         $this->imageName = $imageName;
-
+        $this->setImagePath($imageName);
         return $this;
     }
 
-    public function getUpdateAt(): DateTimeImmutable
-    {
+    public function getUpdateAt(): DateTimeImmutable {
         return $this->updatedAt;
+    }
+
+    public function getImagePath(): ?string
+    {
+        return $this->imagePath;
+    }
+
+    public function setImagePath(string $imagePath): self {
+        $this->imagePath = "/assets/img/posting_image/" . $imagePath;
+        return $this;
     }
 
 }
