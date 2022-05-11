@@ -45,6 +45,12 @@ class ApiMessageController extends AbstractController
         return $this->apiService->getResponseForApi($message);
     }
 
+    #[Route('/sendBy', name: 'message_show_sender', methods: ['GET'])]
+    public function getMessageBySender($sendBy): Response {
+        $message = $this->messageRepository->findBy(['sendBy' => "1", 'deletedAt' => null]);
+        return $this->apiService->getResponseForApi($message);
+    }
+
     #[Route('/', name: 'message_new', methods: ['POST'])]
     public function newMessage(): Response
     {
