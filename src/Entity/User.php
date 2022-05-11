@@ -45,7 +45,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
         ],
     ],
     normalizationContext: ['read:User:collection'],
-    security: 'is_granted("ROLE_USER")'
+    //security: 'is_granted("ROLE_USER")'
     //attributes: ["security" => "is_granted('ROLE_USER')"]
 )
 ]
@@ -62,7 +62,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     /**
      * @ORM\Column(type="string", length=180, unique=true)
      */
-    #[Groups(['read:User:collection'])]
+    #[Groups(['read:User:collection', 'read:Channel:collection'])]
     private $email;
 
     /**
@@ -85,11 +85,13 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
      */
+    #[Groups(['read:User:collection'])]
     private $firstName;
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
      */
+    #[Groups(['read:User:collection'])]
     private $address;
 
     /**
@@ -131,6 +133,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     /**
      * @ORM\OneToOne(targetEntity=Image::class, cascade={"persist", "remove"})
      */
+    #[Groups(['read:User:collection'])]
     private $profileImage;
 
     /**

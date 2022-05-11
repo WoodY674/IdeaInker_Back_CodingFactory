@@ -7,6 +7,7 @@ use App\Repository\MessageRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Gedmo\Mapping\Annotation as Gedmo;
 
 /**
  * @ORM\Entity(repositoryClass=MessageRepository::class)
@@ -24,6 +25,7 @@ use Doctrine\ORM\Mapping as ORM;
             //"security" => "is_granted('READ', object)",
             //"security_message" => "Only auth user can access at this message.",
         ],
+        
         "put" => [
             //"security" => "is_granted('EDIT', object)",
             //"security_message" => "Sorry, but you are not the message owner.",
@@ -48,10 +50,12 @@ class Message
     /**
      * @ORM\Column(type="text", nullable=true)
      */
+    #[Groups(['read:Channel:collection'])]
     private $message;
 
     /**
      * @ORM\Column(type="datetime_immutable")
+     * @Gedmo\Timestampable(on="create")
      */
     private $sendAt;
 
@@ -76,6 +80,11 @@ class Message
      * @ORM\ManyToMany(targetEntity=Image::class)
      */
     private $attachment;
+
+    /**
+     * @ORM\ManyToOne(targetEntity=Channel::class, inversedBy="messages")
+     */
+    private $channel;
 
     public function __construct()
     {
@@ -167,6 +176,18 @@ class Message
     public function removeAttachment(Image $attachment): self
     {
         $this->attachment->removeElement($attachment);
+
+        return $this;
+    }
+
+    public function getChannel(): ?Channel
+    {
+        return $this->channel;
+    }
+
+    public function setChannel(?Channel $channel): self
+    {
+        $this->channel = $channel;
 
         return $this;
     }
