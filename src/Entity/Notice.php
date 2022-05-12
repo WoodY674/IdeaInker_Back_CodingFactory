@@ -34,13 +34,13 @@ class Notice
      * @ORM\ManyToOne(targetEntity=User::class)
      * @ORM\JoinColumn(nullable=false)
      */
-    private $idUserNoted;
+    private $userNoted;
 
     /**
      * @ORM\ManyToOne(targetEntity=User::class)
      * @ORM\JoinColumn(nullable=false)
      */
-    private $userIdNoting;
+    private $userNoting;
 
     public function getId(): ?int
     {
@@ -71,26 +71,26 @@ class Notice
         return $this;
     }
 
-    public function getIdUserNoted(): ?User
+    public function getUserNoted(): ?User
     {
-        return $this->idUserNoted;
+        return $this->userNoted;
     }
 
-    public function setIdUserNoted(?User $idUserNoted): self
+    public function setUserNoted(?User $userNoted): self
     {
-        $this->idUserNoted = $idUserNoted;
+        $this->userNoted = $userNoted;
 
         return $this;
     }
 
-    public function getUserIdNoting(): ?User
+    public function getUserNoting(): ?User
     {
-        return $this->userIdNoting;
+        return $this->userNoting;
     }
 
-    public function setUserIdNoting(?User $userIdNoting): self
+    public function setUserNoting(?User $userNoting): self
     {
-        $this->userIdNoting = $userIdNoting;
+        $this->userNoting = $userNoting;
 
         return $this;
     }
