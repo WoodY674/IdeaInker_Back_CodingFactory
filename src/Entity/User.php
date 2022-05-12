@@ -56,7 +56,10 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     /**
      * @ORM\Column(type="string", length=180, unique=true)
      */
-    #[Groups(['read:User:collection', 'read:Channel:collection'])]
+    #[
+        Groups(['read:User:collection', 'read:Channel:collection']),
+        Length(min: 3)
+    ]
     private $email;
 
     /**
