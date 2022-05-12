@@ -35,7 +35,8 @@ use Symfony\Component\Serializer\Annotation\Groups;
         ],
     ],
     itemOperations: [
-        "get"
+        "get",
+        "put"
     ],
     normalizationContext: ['read:User:collection'],
     //security: 'is_granted("ROLE_USER")'
@@ -132,7 +133,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private $posts;
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * @ORM\Column(type="string", length=255, unique=true)
      */
     #[Groups(['read:Post:User'])]
     private $pseudo;
