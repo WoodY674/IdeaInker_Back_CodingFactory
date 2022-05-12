@@ -108,9 +108,10 @@ class ApiConstructorService {
      */
     public function getJsonBodyFromRequest(Request $request, mixed $targetEntity = null): mixed {
         $uploadApiModel = null;
-        if ($request->headers->get('Content-Type') === 'application/json') {
+        if (str_contains($request->headers->get('Content-Type'), 'application/json')) {
             if (isset($targetEntity)) {
                 //mapping data with json Whith METADATA
+                //dd($request->getContent(), true);
                 $data = json_decode($request->getContent(), true);
                 $uploadApiModel = $this->mappingRelation($targetEntity, $data);
 
@@ -148,7 +149,6 @@ class ApiConstructorService {
     private function extractFile64($data){
         $images = $this->imageCreatorService->convertImages64ToEntity($data);
         $this->persistImage($images);
-        $this->entityManager->flush();
         return $images;
     }
 

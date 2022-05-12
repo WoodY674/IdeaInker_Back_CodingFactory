@@ -19,6 +19,7 @@ class ImageCreatorService {
         } elseif (is_string($rawImage64)) {
             return $this->imageString64($rawImage64);
         }
+        return null;
     }
 
     public function imageString64(string $image64) {
@@ -35,7 +36,8 @@ class ImageCreatorService {
         $images = [];
         foreach ($rawImage64 as $image64) {
             $base64Image = $this->base64FileExtractor->extractBase64String($image64);
-            $imageFile = new UploadedBase64File($base64Image, $this->setUniqueName());
+            $formatType = explode('/', $base64Image[0]);
+            $imageFile = new UploadedBase64File($base64Image[1], $this->setUniqueName() . "." . $formatType[1]);
 
             $image = new Image();
             $image->setImageFile($imageFile);

@@ -60,13 +60,13 @@ class ApiPostController extends AbstractController
         $post = $this->apiService->getJsonBodyFromRequest($request, Post::class);
         $this->entityManager->persist($post);
         $this->entityManager->flush();
-        return $this->json($post);
+        return $this->json($post, 201);
     }
 
     #[Route('/{id}', name: 'post_replace', methods: ['PUT'])]
     public function replacePost(): Response
     {
-        return $this->json('post post');
+        return $this->json('post post',201);
     }
 
     #[Route('/{id}', name: 'post_update', methods: ['PATCH'])]
