@@ -5,6 +5,7 @@ namespace App\Entity;
 use ApiPlatform\Core\Annotation\ApiResource;
 use DateTimeImmutable;
 use Symfony\Component\HttpFoundation\File\File;
+use Symfony\Component\Serializer\Annotation\Groups;
 use Vich\UploaderBundle\Mapping\Annotation as Vich;
 use App\Repository\ImageRepository;
 use Doctrine\ORM\Mapping as ORM;
@@ -59,6 +60,7 @@ class Image
     /**
      * @ORM\Column(type="string", length=255)
      */
+    #[Groups(['read:Post:collection'])]
     private $imagePath;
 
     public function getId(): ?int

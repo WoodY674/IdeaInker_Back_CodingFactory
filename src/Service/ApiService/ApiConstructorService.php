@@ -111,7 +111,6 @@ class ApiConstructorService {
         if (str_contains($request->headers->get('Content-Type'), 'application/json')) {
             if (isset($targetEntity)) {
                 //mapping data with json Whith METADATA
-                //dd($request->getContent(), true);
                 $data = json_decode($request->getContent(), true);
                 $uploadApiModel = $this->mappingRelation($targetEntity, $data);
 
@@ -126,6 +125,13 @@ class ApiConstructorService {
         return json_decode($request->getContent(), true);
     }
 
+    /**
+     * Get metadata for relation and field
+     * if its a relation with image decode base64 else find the entity
+     * @param $entity
+     * @param $data
+     * @return mixed
+     */
     private function mappingRelation($entity, $data) {
         $metadata = $this->metadataService->getMetadata($entity);
         $associationInput = $metadata->getAssociationMappings();
@@ -146,12 +152,20 @@ class ApiConstructorService {
         return $this->fillEntity->fillEntity($entity, $data);
     }
 
+    /**
+     * @param $data
+     * @return Image|array|null
+     */
     private function extractFile64($data){
         $images = $this->imageCreatorService->convertImages64ToEntity($data);
         $this->persistImage($images);
         return $images;
     }
 
+    /**
+     * @param $images
+     * @return void
+     */
     private function persistImage($images) {
         if (is_array($images)) {
             foreach ($images as $image) {

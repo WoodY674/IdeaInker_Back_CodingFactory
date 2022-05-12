@@ -5,6 +5,11 @@ namespace App\Service\ImageService\Base64Utils;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 class UploadedBase64File extends UploadedFile {
+    /**
+     * create a model for file per base of base64
+     * @param string $base64String
+     * @param string $originalName
+     */
     public function __construct(string $base64String, string $originalName)
     {
         $filePath = tempnam(sys_get_temp_dir(), 'UploadedFile');

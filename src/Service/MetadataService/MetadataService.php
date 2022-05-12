@@ -13,6 +13,13 @@ class MetadataService {
         $this->entityManager = $entityManager;
     }
 
+    /**
+     * get the metadata for a entity by the object or string
+     * @param $entity
+     * @return \Doctrine\Persistence\Mapping\ClassMetadata|mixed|void
+     * @throws \Doctrine\Persistence\Mapping\MappingException
+     * @throws \ReflectionException
+     */
     public function getMetadata($entity) {
         return (
             is_string($entity)
