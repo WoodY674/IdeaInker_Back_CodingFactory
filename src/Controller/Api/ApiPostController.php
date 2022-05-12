@@ -54,7 +54,7 @@ class ApiPostController extends AbstractController
 
         return $this->apiService->getResponseForApi($post);
     }
-    
+
     #[Route('/', name: 'post_new', methods: ['POST'])]
     public function newPost(Request $request): Response {
         $post = $this->apiService->getJsonBodyFromRequest($request, Post::class);

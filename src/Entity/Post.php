@@ -62,7 +62,7 @@ use Symfony\Component\Validator\Constraints\Length;
     normalizationContext: [
         'groups' => ['read:Post:collection']
     ],
-    paginationItemsPerPage: 10,
+    paginationItemsPerPage: 100,
     paginationMaximumItemsPerPage: 10
 )
 ]
