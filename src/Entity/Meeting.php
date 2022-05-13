@@ -6,6 +6,8 @@ use ApiPlatform\Core\Annotation\ApiResource;
 use App\Repository\MeetingRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
+use Symfony\Component\Validator\Constraints as Assert;
+
 
 /**
  * @ORM\Entity(repositoryClass=MeetingRepository::class)
@@ -46,6 +48,7 @@ class Meeting
 
     /**
      * @ORM\Column(type="datetime_immutable")
+     * @Assert\NotBlank()
      */
     private $startAt;
 
@@ -73,6 +76,7 @@ class Meeting
 
     /**
      * @ORM\Column(type="datetime_immutable")
+     * @Assert\NotBlank()
      */
     private $endAt;
 

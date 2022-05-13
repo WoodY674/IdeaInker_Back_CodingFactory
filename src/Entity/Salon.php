@@ -8,7 +8,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints\Length;
-use Symfony\Component\Validator\Constraints\Valid;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass=SalonRepository::class)
@@ -54,27 +54,35 @@ class Salon
 
     /**
      * @ORM\Column(type="string", length=255)
+     *@Assert\NotBlank()
      */
     #[
         Groups(['read:Salon:collection', 'write:Salon']),
         Length(min: 3)
+
     ]
     private $name;
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Assert\NotBlank()
      */
     #[Groups(['read:Salon:collection', 'write:Salon'])]
     private $address;
 
     /**
      * @ORM\Column(type="string", length=15)
+     * @Assert\NotBlank()
      */
-    #[Groups(['read:Salon:collection', 'write:Salon'])]
+    #[
+        Groups(['read:Salon:collection', 'write:Salon']),
+        Length(min: 4)
+    ]
     private $zipCode;
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Assert\NotBlank()
      */
     #[Groups(['read:Salon:collection', 'write:Salon'])]
     private $city;
@@ -113,6 +121,7 @@ class Salon
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Assert\NotBlank()
      */
     #[
         Groups(['read:Salon:collection', 'write:Salon'])
@@ -121,6 +130,7 @@ class Salon
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Assert\NotBlank()
      */
     #[
         Groups(['read:Salon:collection', 'write:Salon'])

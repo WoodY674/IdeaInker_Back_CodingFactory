@@ -7,6 +7,7 @@ use App\Repository\CoordinateStoreRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints\Length;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass=CoordinateStoreRepository::class)
@@ -23,6 +24,7 @@ class CoordinateStore
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Assert\NotBlank()
      */
     #[
         Groups(['read:Salon', 'write:Salon']),
@@ -44,6 +46,7 @@ class CoordinateStore
     ]
     /**
      * @ORM\Column(type="string", length=255)
+     * @Assert\NotBlank()
      */
     private $latitude;
 
@@ -52,6 +55,7 @@ class CoordinateStore
     ]
     /**
      * @ORM\Column(type="string", length=255)
+     * @Assert\NotBlank()
      */
     private $longitude;
 

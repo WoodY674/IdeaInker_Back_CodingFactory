@@ -11,6 +11,7 @@ use Gedmo\Mapping\Annotation as Gedmo;
 use Vich\UploaderBundle\Mapping\Annotation as Vich;
 use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints\Length;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass=PostRepository::class)
@@ -78,6 +79,7 @@ class Post
 
     /**
      * @ORM\Column(type="text", nullable=true)
+     *
      */
     #[
         Groups(['read:Post:collection', 'write:Post']),
@@ -107,6 +109,7 @@ class Post
     /**
      * @ORM\ManyToOne(targetEntity=Image::class)
      * @ORM\JoinColumn(nullable=false)
+     * @Assert\NotBlank()
      */
     #[Groups(['read:Post:collection', 'write:Post'])]
     private $image;

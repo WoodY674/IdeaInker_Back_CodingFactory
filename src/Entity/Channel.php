@@ -10,6 +10,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints\Length;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass=ChannelRepository::class)
@@ -29,12 +30,14 @@ class Channel
 
     /**
      * @ORM\ManyToMany(targetEntity=User::class)
+     * @Assert\NotBlank()
      */
     #[Groups(['read:Channel:collection'])]
     private $usersInside;
 
     /**
      * @ORM\OneToMany(targetEntity=Message::class, mappedBy="channel")
+     * @Assert\NotBlank()
      */
     #[Groups(['read:Channel:collection'])]
     private $messages;
