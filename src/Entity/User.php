@@ -38,7 +38,8 @@ use Symfony\Component\Validator\Constraints as Assert;
         ],
     ],
     itemOperations: [
-        "get"
+        "get",
+        "put"
     ],
     normalizationContext: ['read:User:collection'],
     //security: 'is_granted("ROLE_USER")'
@@ -143,7 +144,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private $posts;
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * ORM\Column(type="string", length=255, unique=true)
      * @Assert\NotBlank()
      */
     #[Groups(['read:Post:User'])]
