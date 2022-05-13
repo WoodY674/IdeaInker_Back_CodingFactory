@@ -17,5 +17,4 @@ return [
     Stof\DoctrineExtensionsBundle\StofDoctrineExtensionsBundle::class => ['all' => true],
     ApiPlatform\Core\Bridge\Symfony\Bundle\ApiPlatformBundle::class => ['all' => true],
     Vich\UploaderBundle\VichUploaderBundle::class => ['all' => true],
-    Symfony\Bundle\MercureBundle\MercureBundle::class => ['all' => true],
 ];
