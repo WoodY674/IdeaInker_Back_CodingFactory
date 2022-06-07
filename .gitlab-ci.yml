@@ -4,24 +4,16 @@
 # Dependency Scanning customization: https://docs.gitlab.com/ee/user/application_security/dependency_scanning/#customizing-the-dependency-scanning-settings
 # Note that environment variables can be set in several places
 # See https://docs.gitlab.com/ee/ci/variables/#cicd-variable-precedence
-default:
-  image: php:7.4-apache
-  services:
-    - name: mysql:5.7
-      alias: mysql
-
+image: jakzal/phpqa:php8.1
+before_script:
+  - composer install --no-scripts
 cache:
-  key: ${CI_COMMIT_REF_SLUG}
   paths:
     - vendor/
-
-phpunit:
-  stage: test
-  script:
-    - sh scripts/ci-php-install.sh
-    - php bin/composer.phar install -o
-    - php bin/composer.phar require --dev symfony/phpunit-bridge
-    - sh scripts/php_test_run.sh
-
 stages:
-  - test
+  - UnitTests
+phpunit:
+  stage: UnitTests
+  script:
+    - php bin/phpunit
+  allow_failure: false
