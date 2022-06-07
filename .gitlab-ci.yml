@@ -11,8 +11,8 @@ cache:
   paths:
     - vendor/
 stages:
+  - CodingStandards
   - UnitTests
-
 twig-lint:
   stage: CodingStandards
   script:
