@@ -6,6 +6,12 @@
 # See https://docs.gitlab.com/ee/ci/variables/#cicd-variable-precedence
 stages:
 - test
+
+unit-test:
+  stage: test
+  script:
+    - php bin/phpunit
+
 sast:
   stage: test
 include:
