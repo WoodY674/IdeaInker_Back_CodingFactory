@@ -6,8 +6,8 @@ use ApiPlatform\Core\Annotation\ApiResource;
 use App\Repository\CoordinateStoreRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
-use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\Validator\Constraints\Length;
 
 /**
  * @ORM\Entity(repositoryClass=CoordinateStoreRepository::class)

@@ -8,18 +8,22 @@ use App\Repository\DependencyRepository;
 
 class DependencyDataPersister implements ContextAwareDataPersisterInterface
 {
-    public function __construct(private DependencyRepository $dependencyRepository) {
+    public function __construct(private DependencyRepository $dependencyRepository)
+    {
     }
 
-    public function supports($data, array $context = []): bool {
-        return  $data instanceof Dependency;
+    public function supports($data, array $context = []): bool
+    {
+        return $data instanceof Dependency;
     }
 
-    public function persist($data, array $context = []) {
+    public function persist($data, array $context = [])
+    {
         $this->dependencyRepository->persist($data);
     }
 
-    public function remove($data, array $context = []) {
+    public function remove($data, array $context = [])
+    {
         $this->dependencyRepository->remove($data);
     }
 }

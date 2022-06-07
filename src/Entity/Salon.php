@@ -7,39 +7,38 @@ use App\Repository\SalonRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 use Symfony\Component\Serializer\Annotation\Groups;
-use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\Validator\Constraints\Length;
 
 /**
  * @ORM\Entity(repositoryClass=SalonRepository::class)
  */
 #[ApiResource(
     collectionOperations: [
-        "get",
-        "post"
+        'get',
+        'post',
     ],
     itemOperations: [
-        "get" => [
+        'get' => [
             'normalization_context' => ['groups' => ['read:Salon:collection', 'read:Salon:item', 'read:Salon:User']],
-            //"security" => "is_granted('READ', object)",
-            //"security_message" => "Only auth user can access at this salon.",
+            // "security" => "is_granted('READ', object)",
+            // "security_message" => "Only auth user can access at this salon.",
         ],
-        "put" => [
-            //"security" => "is_granted('EDIT', object)",
-            //"security_message" => "Sorry, but you are not the salon owner.",
+        'put' => [
+            // "security" => "is_granted('EDIT', object)",
+            // "security_message" => "Sorry, but you are not the salon owner.",
         ],
-        "delete" => [
-            //"security" => "is_granted('DELETE', object)",
-            //"security_message" => "Sorry, but you are not the salon owner.",
+        'delete' => [
+            // "security" => "is_granted('DELETE', object)",
+            // "security_message" => "Sorry, but you are not the salon owner.",
         ],
     ],
     denormalizationContext: [
         ['groups' => ['write:Salon']],
     ],
     normalizationContext: [
-        'groups' => ['read:Salon:collection']
+        'groups' => ['read:Salon:collection'],
     ],
-
 )
 ]
 class Salon
@@ -136,8 +135,6 @@ class Salon
         Groups(['read:Salon:collection', 'write:Salon'])
     ]
     private $longitude;
-
-
 
     public function getName(): ?string
     {
@@ -275,5 +272,4 @@ class Salon
 
         return $this;
     }
-
 }

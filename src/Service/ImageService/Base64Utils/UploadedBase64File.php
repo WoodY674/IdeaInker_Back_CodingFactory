@@ -4,11 +4,10 @@ namespace App\Service\ImageService\Base64Utils;
 
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 
-class UploadedBase64File extends UploadedFile {
+class UploadedBase64File extends UploadedFile
+{
     /**
-     * create a model for file per base of base64
-     * @param string $base64String
-     * @param string $originalName
+     * create a model for file per base of base64.
      */
     public function __construct(string $base64String, string $originalName)
     {

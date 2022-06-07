@@ -9,14 +9,16 @@ class UploadImageController
 {
     private EntityManagerInterface $entityManager;
 
-    public function __construct(EntityManagerInterface $entityManager){
+    public function __construct(EntityManagerInterface $entityManager)
+    {
         $this->entityManager = $entityManager;
     }
 
-    public function settingImage($files) {
+    public function settingImage($files)
+    {
         $data = [];
-        if(!empty($files['image'])) {
-            if(is_array($files['image'])) {
+        if (!empty($files['image'])) {
+            if (is_array($files['image'])) {
                 foreach ($files['image'] as $file) {
                     $image = new Image();
                     $image->setImageFile($file);
@@ -31,6 +33,7 @@ class UploadImageController
                 $files['image'] = $image;
             }
         }
+
         return $files;
     }
 }

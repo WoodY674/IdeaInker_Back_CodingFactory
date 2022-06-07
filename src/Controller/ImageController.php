@@ -14,57 +14,58 @@ use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
- * Extend de abstactController pour avoir l'autowire (besoin de changer car l'autowire doit se passer dans le yaml
+ * Extend de abstactController pour avoir l'autowire (besoin de changer car l'autowire doit se passer dans le yaml.
  */
 class ImageController extends AbstractController
 {
     private EntityManagerInterface $entityManager;
 
-    public function __construct(EntityManagerInterface $entityManager) {
+    public function __construct(EntityManagerInterface $entityManager)
+    {
         $this->entityManager = $entityManager;
     }
 
     /**
      * quand notre classe se fait invoke par une entity (voir l'entité post) nous arrivons ici
      * nous récupérons les données (entité/files)
-     * nous les ajoutons dans un tableau pour les transportez de fonction en fonction plus simplement
+     * nous les ajoutons dans un tableau pour les transportez de fonction en fonction plus simplement.
      *
      * il faut retournée l'entité travailé
      */
-    public function __invoke(Request $request) {
+    public function __invoke(Request $request)
+    {
         $entity = $request->attributes->get('data');
         $files = $request->files->get('files');
         $dataTools = [
             'entity' => $entity,
             'request' => $request,
-            'files' => $files
+            'files' => $files,
         ];
+
         return $this->executeIfEntityValid($dataTools);
     }
 
     /**
-     * @param array $dataTools
      * @return Post
      *
      * nous vérifions les instances et effectuons un traitement spécifique pour chaque entité
      * puis on retourne lentité traiter
      */
-    private function executeIfEntityValid(Array $dataTools) {
+    private function executeIfEntityValid(array $dataTools)
+    {
         $entity = $dataTools['entity'];
         switch ($entity) {
-            case ($entity instanceof Meeting):
-            case ($entity instanceof Salon):
-            case ($entity instanceof Post):
+            case $entity instanceof Meeting:
+            case $entity instanceof Salon:
+            case $entity instanceof Post:
                 return $this->setImageForPost($dataTools['entity'], $dataTools['files']);
-            case ($entity instanceof User):
+            case $entity instanceof User:
             default:
                 throw new RuntimeException('Entity inconnue');
         }
     }
 
     /**
-     * @param Post $post
-     * @param File $file
      * @return Post
      *
      * on crée une image (car une seul peut etre fait) on la persite
@@ -72,7 +73,8 @@ class ImageController extends AbstractController
      *
      * et on return
      */
-    private function setImageForPost(Post $post, File $file) {
+    private function setImageForPost(Post $post, File $file)
+    {
         $image = new Image();
         $image->setImageFile($file);
 

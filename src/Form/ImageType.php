@@ -13,7 +13,7 @@ class ImageType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('imageFile',VichFileType::class, [])
+            ->add('imageFile', VichFileType::class, [])
         ;
     }
 
@@ -21,7 +21,7 @@ class ImageType extends AbstractType
     {
         $resolver->setDefaults([
             'data_class' => Image::class,
-            'csrf_protection' => false
+            'csrf_protection' => false,
         ]);
     }
 }

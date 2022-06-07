@@ -15,17 +15,16 @@ use Symfony\Component\Routing\Annotation\Route;
 #[Route('/api2/message')]
 class ApiMessageController extends AbstractController
 {
-
     private EntityManagerInterface $entityManager;
     private MessageRepository $messageRepository;
     private UserRepository $userRepository;
     private ApiConstructorService $apiService;
 
     public function __construct(
-        MessageRepository         $messageRepository,
-        UserRepository         $userRepository,
+        MessageRepository $messageRepository,
+        UserRepository $userRepository,
         EntityManagerInterface $entityManager,
-        ApiConstructorService  $apiService)
+        ApiConstructorService $apiService)
     {
         $this->messageRepository = $messageRepository;
         $this->entityManager = $entityManager;
@@ -34,20 +33,26 @@ class ApiMessageController extends AbstractController
     }
 
     #[Route('/', name: 'message_all', methods: ['GET'])]
-    public function getAllMessage(): Response {
+    public function getAllMessage(): Response
+    {
         $messages = $this->messageRepository->findBy(['deletedAt' => null]);
+
         return $this->apiService->getResponseForApi($messages);
     }
 
     #[Route('/{id}', name: 'message_show', methods: ['GET'])]
-    public function getOneMessage($id): Response {
+    public function getOneMessage($id): Response
+    {
         $message = $this->messageRepository->findOneBy(['id' => $id, 'deletedAt' => null]);
+
         return $this->apiService->getResponseForApi($message);
     }
 
     #[Route('/sendBy', name: 'message_show_sender', methods: ['GET'])]
-    public function getMessageBySender($sendBy): Response {
-        $message = $this->messageRepository->findBy(['sendBy' => "1", 'deletedAt' => null]);
+    public function getMessageBySender($sendBy): Response
+    {
+        $message = $this->messageRepository->findBy(['sendBy' => '1', 'deletedAt' => null]);
+
         return $this->apiService->getResponseForApi($message);
     }
 
@@ -59,7 +64,7 @@ class ApiMessageController extends AbstractController
             if (!empty($request)) {
                 throw new \Exception();
             }
-            $user = $this->userRepository->findOneBy(['id' => $response['manager'],'deletedAt' => null]);
+            $user = $this->userRepository->findOneBy(['id' => $response['manager'], 'deletedAt' => null]);
             if (!$user) {
                 throw new \Exception();
             }
@@ -75,7 +80,7 @@ class ApiMessageController extends AbstractController
 
             return $this->apiService->getResponseForApi($user);
         } catch (\Exception $exception) {
-            return $this->apiService->getResponseForApi("Data no valid or user not found")->setStatusCode(422);
+            return $this->apiService->getResponseForApi('Data no valid or user not found')->setStatusCode(422);
         }
     }
 
@@ -92,7 +97,8 @@ class ApiMessageController extends AbstractController
     }
 
     #[Route('/{id}', name: 'message_delete', methods: ['DELETE'])]
-    public function deleteMessage($id): Response{
+    public function deleteMessage($id): Response
+    {
         try {
             $message = $this->messageRepository->findOneBy(['id' => $id]);
             if (!$message) {
@@ -102,9 +108,9 @@ class ApiMessageController extends AbstractController
             $this->entityManager->remove($message);
             $this->entityManager->flush();
 
-            return $this->apiService->getResponseForApi("Message deleted successfully");
-        }catch (\Exception $exception) {
-            return $this->apiService->getResponseForApi("Message not found")->setStatusCode(404);
+            return $this->apiService->getResponseForApi('Message deleted successfully');
+        } catch (\Exception $exception) {
+            return $this->apiService->getResponseForApi('Message not found')->setStatusCode(404);
         }
     }
 }

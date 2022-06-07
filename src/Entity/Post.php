@@ -4,14 +4,13 @@ namespace App\Entity;
 
 use ApiPlatform\Core\Annotation\ApiResource;
 use App\Controller\EmptyController;
-use App\Controller\ImageController;
 use App\Repository\PostRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
-use Vich\UploaderBundle\Mapping\Annotation as Vich;
 use Symfony\Component\Serializer\Annotation\Groups;
-use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\Validator\Constraints\Length;
+use Vich\UploaderBundle\Mapping\Annotation as Vich;
 
 /**
  * @ORM\Entity(repositoryClass=PostRepository::class)
@@ -19,49 +18,49 @@ use Symfony\Component\Validator\Constraints as Assert;
  */
 #[ApiResource(
     collectionOperations: [
-        "get",
-        "post" => [
-            "controller" => EmptyController::class,
-            "deserialize" => false,
-            "openapi_context" => [
-                "requestBody" => [
-                    "content" => [
-                        "multipart/form-data" => [
-                            "schema" => [
-                                "type" => "object",
-                                "properties" => [
-                                    "file" => [
-                                        "type" => "string",
-                                        "format" => "binary"
-                                    ]
-                                ]
-                            ]
-                        ]
-                    ]
-                ]
-            ]
-        ]
+        'get',
+        'post' => [
+            'controller' => EmptyController::class,
+            'deserialize' => false,
+            'openapi_context' => [
+                'requestBody' => [
+                    'content' => [
+                        'multipart/form-data' => [
+                            'schema' => [
+                                'type' => 'object',
+                                'properties' => [
+                                    'file' => [
+                                        'type' => 'string',
+                                        'format' => 'binary',
+                                    ],
+                                ],
+                            ],
+                        ],
+                    ],
+                ],
+            ],
+        ],
     ],
     itemOperations: [
-        "get" => [
+        'get' => [
             'normalization_context' => ['groups' => ['read:Post:collection', 'read:Post:item', 'read:Post:User']],
-            //"security" => "is_granted('READ', object)",
-            //"security_message" => "Only auth user can access at this post.",
+            // "security" => "is_granted('READ', object)",
+            // "security_message" => "Only auth user can access at this post.",
         ],
-        "put" => [
-            //"security" => "is_granted('EDIT', object)",
-            //"security_message" => "Sorry, but you are not the post owner.",
+        'put' => [
+            // "security" => "is_granted('EDIT', object)",
+            // "security_message" => "Sorry, but you are not the post owner.",
         ],
-        "delete" => [
-            //"security" => "is_granted('DELETE', object)",
-            //"security_message" => "Sorry, but you are not the post owner.",
+        'delete' => [
+            // "security" => "is_granted('DELETE', object)",
+            // "security_message" => "Sorry, but you are not the post owner.",
         ],
     ],
     denormalizationContext: [
         ['groups' => ['write:Post']],
     ],
     normalizationContext: [
-        'groups' => ['read:Post:collection']
+        'groups' => ['read:Post:collection'],
     ],
     paginationItemsPerPage: 100,
     paginationMaximumItemsPerPage: 10
@@ -79,7 +78,6 @@ class Post
 
     /**
      * @ORM\Column(type="text", nullable=true)
-     *
      */
     #[
         Groups(['read:Post:collection', 'write:Post']),
@@ -204,17 +202,11 @@ class Post
         return $this;
     }
 
-    /**
-     * @return string|null
-     */
     public function getImagePath(): ?string
     {
         return $this->imagePath;
     }
 
-    /**
-     * @param string|null $imagePath
-     */
     public function setImagePath(?string $imagePath): void
     {
         $this->imagePath = $imagePath;

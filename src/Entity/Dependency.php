@@ -15,15 +15,15 @@ use Symfony\Component\Validator\Constraints\NotBlank;
         'get',
         'put' => [
             'denormilization_context' => [
-                'groups' => ['put:Dependency']
-            ]
+                'groups' => ['put:Dependency'],
+            ],
         ],
-        'delete'
+        'delete',
     ],
     paginationEnabled: false
 )]
-class Dependency {
-
+class Dependency
+{
     #[ApiProperty(
         identifier: true
     )]
@@ -31,7 +31,7 @@ class Dependency {
 
     #[
         ApiProperty(
-            description: "Nom de la dépendance"
+            description: 'Nom de la dépendance'
         ),
         Length(min: 2),
         NotBlank()
@@ -40,9 +40,9 @@ class Dependency {
 
     #[
         ApiProperty(
-            description: "Version de la dépendance",
+            description: 'Version de la dépendance',
             openapiContext: [
-                'example' => "5.2.*"
+                'example' => '5.2.*',
             ],
         ),
         Length(min: 2),
@@ -51,43 +51,30 @@ class Dependency {
     ]
     private string $version;
 
-    public function __construct(string $name, string $version) {
+    public function __construct(string $name, string $version)
+    {
         $this->uuid = Uuid::uuid5(Uuid::NAMESPACE_URL, $name)->toString();
         $this->name = $name;
         $this->version = $version;
     }
 
-    /**
-     * @return string
-     */
     public function getUuid(): string
     {
         return $this->uuid;
     }
 
-    /**
-     * @return string
-     */
     public function getName(): string
     {
         return $this->name;
     }
 
-    /**
-     * @return string
-     */
     public function getVersion(): string
     {
         return $this->version;
     }
 
-    /**
-     * @param string $version
-     */
     public function setVersion(string $version): void
     {
         $this->version = $version;
     }
-
-
 }

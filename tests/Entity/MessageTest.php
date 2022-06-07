@@ -9,8 +9,8 @@ use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 
 class MessageTest extends KernelTestCase
 {
-
-    public function getEntity(){
+    public function getEntity()
+    {
         return (new Message())
             ->setMessage('test')
             ->setSendBy(new User())
@@ -18,14 +18,15 @@ class MessageTest extends KernelTestCase
             ->setChannel(new Channel());
     }
 
-    public function assertHasErrors(Message $message, int $numberOfErrors = 0){
+    public function assertHasErrors(Message $message, int $numberOfErrors = 0)
+    {
         self::bootKernel();
         $error = self::$container->get('validator')->validate($message);
         $this->assertCount($numberOfErrors, $error);
     }
 
-    public function testMessageIsValid(){
+    public function testMessageIsValid()
+    {
         $this->assertHasErrors($this->getEntity(), 0);
     }
-
 }

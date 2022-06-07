@@ -3,28 +3,32 @@
 namespace App\Service\MetadataService;
 
 use Doctrine\ORM\EntityManagerInterface;
-use Metadata\MetadataFactoryInterface;
-use Symfony\Component\Serializer\Mapping\Factory\ClassMetadataFactoryInterface;
 
-class MetadataService {
+class MetadataService
+{
     private EntityManagerInterface $entityManager;
 
-    public function __construct(EntityManagerInterface $entityManager) {
+    public function __construct(EntityManagerInterface $entityManager)
+    {
         $this->entityManager = $entityManager;
     }
 
     /**
-     * get the metadata for a entity by the object or string
+     * get the metadata for a entity by the object or string.
+     *
      * @param $entity
+     *
      * @return \Doctrine\Persistence\Mapping\ClassMetadata|mixed|void
+     *
      * @throws \Doctrine\Persistence\Mapping\MappingException
      * @throws \ReflectionException
      */
-    public function getMetadata($entity) {
-        return (
+    public function getMetadata($entity)
+    {
+        return
             is_string($entity)
                 ? $this->entityManager->getMetadataFactory()->getMetadataFor($entity)
                 : $this->entityManager->getMetadataFactory()->getMetadataFor($entity::class)
-        );
+        ;
     }
 }

@@ -26,7 +26,6 @@ class Notice
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
-     *
      */
     private $comment;
 

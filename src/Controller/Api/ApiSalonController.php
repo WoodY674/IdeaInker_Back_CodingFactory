@@ -15,17 +15,16 @@ use Symfony\Component\Routing\Annotation\Route;
 #[Route('/api2/salon')]
 class ApiSalonController extends AbstractController
 {
-
     private EntityManagerInterface $entityManager;
     private SalonRepository $salonRepository;
     private UserRepository $userRepository;
     private ApiConstructorService $apiService;
 
     public function __construct(
-        SalonRepository         $salonRepository,
-        UserRepository         $userRepository,
+        SalonRepository $salonRepository,
+        UserRepository $userRepository,
         EntityManagerInterface $entityManager,
-        ApiConstructorService  $apiService)
+        ApiConstructorService $apiService)
     {
         $this->salonRepository = $salonRepository;
         $this->entityManager = $entityManager;
@@ -34,14 +33,18 @@ class ApiSalonController extends AbstractController
     }
 
     #[Route('/', name: 'salon_all', methods: ['GET'])]
-    public function getAllSalon(): Response {
+    public function getAllSalon(): Response
+    {
         $salons = $this->salonRepository->findBy(['deletedAt' => null]);
+
         return $this->apiService->getResponseForApi($salons);
     }
 
     #[Route('/{id}', name: 'salon_show', methods: ['GET'])]
-    public function getOneSalon($id): Response {
+    public function getOneSalon($id): Response
+    {
         $salon = $this->salonRepository->findOneBy(['id' => $id, 'deletedAt' => null]);
+
         return $this->apiService->getResponseForApi($salon);
     }
 
@@ -52,9 +55,10 @@ class ApiSalonController extends AbstractController
             $salon = $this->apiService->getJsonBodyFromRequest($request, Salon::class);
             $this->entityManager->persist($salon);
             $this->entityManager->flush();
+
             return $this->json($salon);
         } catch (\Exception $exception) {
-            return $this->apiService->getResponseForApi("Data no valid or user not found")->setStatusCode(422);
+            return $this->apiService->getResponseForApi('Data no valid or user not found')->setStatusCode(422);
         }
     }
 
@@ -71,7 +75,8 @@ class ApiSalonController extends AbstractController
     }
 
     #[Route('/{id}', name: 'salon_delete', methods: ['DELETE'])]
-    public function deleteSalon($id): Response{
+    public function deleteSalon($id): Response
+    {
         try {
             $salon = $this->salonRepository->findOneBy(['id' => $id]);
             if (!$salon) {
@@ -81,9 +86,9 @@ class ApiSalonController extends AbstractController
             $salon->setDeletedAt(new \DateTimeImmutable());
             $this->entityManager->flush();
 
-            return $this->apiService->getResponseForApi("Salon deleted successfully");
-        }catch (\Exception $exception) {
-            return $this->apiService->getResponseForApi("Salon not found")->setStatusCode(404);
+            return $this->apiService->getResponseForApi('Salon deleted successfully');
+        } catch (\Exception $exception) {
+            return $this->apiService->getResponseForApi('Salon not found')->setStatusCode(404);
         }
     }
 }

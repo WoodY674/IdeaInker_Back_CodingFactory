@@ -4,7 +4,8 @@ namespace App\Controller;
 
 class EmptyController
 {
-    public function __invoke($data){
+    public function __invoke($data)
+    {
         return $data;
     }
 }

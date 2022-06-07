@@ -3,13 +3,13 @@
 namespace App\Entity;
 
 use ApiPlatform\Core\Annotation\ApiResource;
-use DateTimeImmutable;
-use Symfony\Component\HttpFoundation\File\File;
-use Symfony\Component\Validator\Constraints as Assert;
-use Symfony\Component\Serializer\Annotation\Groups;
-use Vich\UploaderBundle\Mapping\Annotation as Vich;
 use App\Repository\ImageRepository;
+use DateTimeImmutable;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\HttpFoundation\File\File;
+use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Component\Validator\Constraints as Assert;
+use Vich\UploaderBundle\Mapping\Annotation as Vich;
 
 /**
  * @ORM\Entity(repositoryClass=ImageRepository::class)
@@ -17,17 +17,17 @@ use Doctrine\ORM\Mapping as ORM;
  */
 #[ApiResource(
     itemOperations: [
-        "get" => [
-            //"security" => "is_granted('READ', object)",
-            //"security_message" => "Only auth user can access at this image.",
+        'get' => [
+            // "security" => "is_granted('READ', object)",
+            // "security_message" => "Only auth user can access at this image.",
         ],
-        "put" => [
-            //"security" => "is_granted('EDIT', object)",
-            //"security_message" => "Sorry, but you are not the image owner.",
+        'put' => [
+            // "security" => "is_granted('EDIT', object)",
+            // "security_message" => "Sorry, but you are not the image owner.",
         ],
-        "delete" => [
-            //"security" => "is_granted('DELETE', object)",
-            //"security_message" => "Sorry, but you are not the image owner.",
+        'delete' => [
+            // "security" => "is_granted('DELETE', object)",
+            // "security_message" => "Sorry, but you are not the image owner.",
         ],
     ],
 )
@@ -54,7 +54,6 @@ class Image
 
     /**
      * @ORM\Column(type="datetime_immutable", nullable=true)
-     * @var DateTimeImmutable
      */
     private DateTimeImmutable $updatedAt;
 
@@ -70,16 +69,12 @@ class Image
         return $this->id;
     }
 
-    /**
-     * @return File
-     */
     public function getImageFile(): File
     {
         return $this->imageFile;
     }
 
     /**
-     * @param File $imageFile
      * @return Image
      */
     public function setImageFile(File $imageFile): self
@@ -97,13 +92,16 @@ class Image
         return $this->imageName;
     }
 
-    public function setImageName(string $imageName): self {
+    public function setImageName(string $imageName): self
+    {
         $this->imageName = $imageName;
         $this->setImagePath($imageName);
+
         return $this;
     }
 
-    public function getUpdateAt(): DateTimeImmutable {
+    public function getUpdateAt(): DateTimeImmutable
+    {
         return $this->updatedAt;
     }
 
@@ -112,9 +110,10 @@ class Image
         return $this->imagePath;
     }
 
-    public function setImagePath(string $imagePath): self {
-        $this->imagePath = "/assets/img/posting_image/" . $imagePath;
+    public function setImagePath(string $imagePath): self
+    {
+        $this->imagePath = '/assets/img/posting_image/'.$imagePath;
+
         return $this;
     }
-
 }

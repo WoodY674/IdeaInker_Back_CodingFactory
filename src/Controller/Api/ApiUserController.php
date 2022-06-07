@@ -7,11 +7,13 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
 #[Route('/api2/user')]
-class ApiUserController extends AbstractController {
-
+class ApiUserController extends AbstractController
+{
     #[Route('/me', name: 'me', methods: ['GET'])]
-    public function userMe(): Response {
+    public function userMe(): Response
+    {
         dd($this->getUser());
-        return "test";
+
+        return 'test';
     }
 }

@@ -2,7 +2,6 @@
 
 namespace App\Entity;
 
-use ApiPlatform\Core\Action\NotFoundAction;
 use ApiPlatform\Core\Annotation\ApiResource;
 use App\Controller\MeController;
 use App\Repository\UserRepository;
@@ -13,37 +12,35 @@ use Gedmo\Mapping\Annotation as Gedmo;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Serializer\Annotation\Groups;
-use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Validator\Constraints as Assert;
-
+use Symfony\Component\Validator\Constraints\Length;
 
 /**
  * @ORM\Entity(repositoryClass=UserRepository::class)
  */
 #[ApiResource(
     collectionOperations: [
-        "me" => [
+        'me' => [
             'pagination_enable' => false,
             'path' => '/me',
             'method' => 'get',
             'controller' => MeController::class,
             'read' => false,
             'openapi_context' => [
-                'security' => [['bearerAuth' => []]]
+                'security' => [['bearerAuth' => []]],
             ],
-
         ],
-        "post" => [
-            "path" => "/register"
+        'post' => [
+            'path' => '/register',
         ],
     ],
     itemOperations: [
-        "get",
-        "put"
+        'get',
+        'put',
     ],
     normalizationContext: ['read:User:collection'],
-    //security: 'is_granted("ROLE_USER")'
-    //attributes: ["security" => "is_granted('ROLE_USER')"]
+    // security: 'is_granted("ROLE_USER")'
+    // attributes: ["security" => "is_granted('ROLE_USER')"]
 )
 ]
 class User implements UserInterface, PasswordAuthenticatedUserInterface
@@ -144,7 +141,8 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private $posts;
 
     /**
-     * ORM\Column(type="string", length=255, unique=true)
+     * ORM\Column(type="string", length=255, unique=true).
+     *
      * @Assert\NotBlank()
      */
     #[Groups(['read:Post:User'])]
