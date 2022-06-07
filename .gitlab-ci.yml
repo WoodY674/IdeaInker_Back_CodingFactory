@@ -12,6 +12,11 @@ cache:
     - vendor/
 stages:
   - UnitTests
+twig-lint:
+  stage: CodingStandards
+  script:
+    - twig-lint lint ./templates
+  allow_failure: false
 phpunit:
   stage: UnitTests
   script:
