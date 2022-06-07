@@ -5,9 +5,9 @@
 # Note that environment variables can be set in several places
 # See https://docs.gitlab.com/ee/ci/variables/#cicd-variable-precedence
 image: php:8.0-cli
-before_script:
-  - composer install --no-scripts
-
+cache:
+  paths:
+    - vendor/
 stages:
 - test
 
