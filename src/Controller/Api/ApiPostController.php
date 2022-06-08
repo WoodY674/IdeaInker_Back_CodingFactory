@@ -28,8 +28,7 @@ class ApiPostController extends AbstractController
         EntityManagerInterface $entityManager,
         ApiConstructorService $apiService,
         ValidatorInterface $validator
-    )
-    {
+    ) {
         $this->postRepository = $postRepository;
         $this->entityManager = $entityManager;
         $this->apiService = $apiService;
