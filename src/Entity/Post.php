@@ -20,28 +20,33 @@ class Post
      * @ORM\Column(type="integer")
      */
     private $id;
+    const ID = "post_id";
 
     /**
      * @ORM\Column(type="text", nullable=true)
      */
     private $content;
+    const CONTENT = "content";
 
     /**
      * @ORM\Column(type="datetime_immutable")
      * @Gedmo\Timestampable(on="create")
      */
     private $createdAt;
+    const CREATED_AT = "created_at";
 
     /**
      * @ORM\Column(type="datetime_immutable", nullable=true)
      * @Gedmo\Timestampable(on="update")
      */
     private $updatedAt;
+    const UPDATED_AT = "updated_at";
 
     /**
      * @ORM\Column(type="datetime_immutable", nullable=true)
      */
     private $deletedAt;
+    const DELETED_AT = "deleted_at";
 
     /**
      * @ORM\ManyToOne(targetEntity=Image::class)
@@ -49,17 +54,14 @@ class Post
      * @Assert\NotBlank()
      */
     private $image;
-
-    /**
-     * @var string|null
-     */
-    private ?string $imagePath;
+    const IMAGE = "image";
 
     /**
      * @ORM\ManyToOne(targetEntity=User::class, inversedBy="posts")
      * @ORM\JoinColumn(nullable=false)
      */
     private $createdBy;
+    const CREATED_BY = "created_by";
 
     public function getId(): ?int
     {
@@ -136,15 +138,5 @@ class Post
         $this->createdBy = $createdBy;
 
         return $this;
-    }
-
-    public function getImagePath(): ?string
-    {
-        return $this->imagePath;
-    }
-
-    public function setImagePath(?string $imagePath): void
-    {
-        $this->imagePath = $imagePath;
     }
 }

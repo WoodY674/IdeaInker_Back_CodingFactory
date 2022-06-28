@@ -51,8 +51,8 @@ class ApiSalonController extends AbstractController
             }
             $manager = $salon->getManager();
             if(isset($manager)) {
-                $metadataImage = $this->getDoctrine()->getManager()->getMetadataFactory()->getMetadataFor(User::class);
-                $data[$key][Salon::MANAGER] = $this->apiService->getSimpleDataFromEntity($manager, $metadataImage);
+                $metadataUser = $this->getDoctrine()->getManager()->getMetadataFactory()->getMetadataFor(User::class);
+                $data[$key][Salon::MANAGER] = $this->apiService->getSimpleDataFromEntity($manager, $metadataUser);
                 unset($data[$key][Salon::MANAGER]['password']);
                 unset($data[$key][Salon::MANAGER]['roles']);
                 $imageManager = $manager->getProfileImage();
