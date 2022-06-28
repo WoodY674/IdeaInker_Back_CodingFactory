@@ -2,36 +2,15 @@
 
 namespace App\Entity;
 
-use ApiPlatform\Core\Annotation\ApiResource;
 use App\Repository\ImageRepository;
 use DateTimeImmutable;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\HttpFoundation\File\File;
-use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
-use Vich\UploaderBundle\Mapping\Annotation as Vich;
 
 /**
  * @ORM\Entity(repositoryClass=ImageRepository::class)
- * @Vich\Uploadable
  */
-#[ApiResource(
-    itemOperations: [
-        'get' => [
-            // "security" => "is_granted('READ', object)",
-            // "security_message" => "Only auth user can access at this image.",
-        ],
-        'put' => [
-            // "security" => "is_granted('EDIT', object)",
-            // "security_message" => "Sorry, but you are not the image owner.",
-        ],
-        'delete' => [
-            // "security" => "is_granted('DELETE', object)",
-            // "security_message" => "Sorry, but you are not the image owner.",
-        ],
-    ],
-)
-]
 class Image
 {
     /**
@@ -40,10 +19,9 @@ class Image
      * @ORM\Column(type="integer")
      */
     private ?int $id;
-
+    const ID = "image_id";
     /**
      * @var ?File
-     * @Vich\UploadableField(mapping="post_image", fileNameProperty="imageName")
      */
     private ?File $imageFile;
 
@@ -51,18 +29,19 @@ class Image
      * @ORM\Column(type="string", length=255)
      */
     private ?string $imageName;
-
+    const IMAGE_NAME = "image_name";
     /**
      * @ORM\Column(type="datetime_immutable", nullable=true)
      */
     private DateTimeImmutable $updatedAt;
+    const UPDATED_AT = "updated_at";
 
     /**
      * @ORM\Column(type="string", length=255, nullable=false)
      * @Assert\NotBlank()
      */
-    #[Groups(['read:Post:collection'])]
     private $imagePath;
+    const IMAGE_PATH = "image_path";
 
     public function getId(): ?int
     {
@@ -100,7 +79,7 @@ class Image
         return $this;
     }
 
-    public function getUpdateAt(): DateTimeImmutable
+    public function getUpdatedAt(): DateTimeImmutable
     {
         return $this->updatedAt;
     }

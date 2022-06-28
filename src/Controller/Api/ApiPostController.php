@@ -39,7 +39,7 @@ class ApiPostController extends AbstractController
     #[Route('/', name: 'post_all', methods: ['GET'])]
     public function getAllPost(Request $request): Response
     {
-        $posts = $this->postRepository->findBy(['deletedAt' => null]);
+        $posts = $this->postRepository->findBy(['deletedAt' => null], ['sendAt' => 'ASC']);
 
         return $this->apiService->getResponseForApi($posts);
     }

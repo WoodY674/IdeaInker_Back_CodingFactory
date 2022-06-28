@@ -12,8 +12,8 @@ use Doctrine\Persistence\ManagerRegistry;
  * @method Salon[]    findAll()
  * @method Salon[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
  */
-class SalonRepository extends ServiceEntityRepository
-{
+class SalonRepository extends ServiceEntityRepository {
+
     public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, Salon::class);

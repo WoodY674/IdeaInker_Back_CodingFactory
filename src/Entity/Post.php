@@ -2,70 +2,16 @@
 
 namespace App\Entity;
 
-use ApiPlatform\Core\Annotation\ApiResource;
-use App\Controller\EmptyController;
 use App\Repository\PostRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
-use Symfony\Component\Validator\Constraints\Length;
-use Vich\UploaderBundle\Mapping\Annotation as Vich;
+
 
 /**
  * @ORM\Entity(repositoryClass=PostRepository::class)
- * @Vich\Uploadable
  */
-#[ApiResource(
-    collectionOperations: [
-        'get',
-        'post' => [
-            'controller' => EmptyController::class,
-            'deserialize' => false,
-            'openapi_context' => [
-                'requestBody' => [
-                    'content' => [
-                        'multipart/form-data' => [
-                            'schema' => [
-                                'type' => 'object',
-                                'properties' => [
-                                    'file' => [
-                                        'type' => 'string',
-                                        'format' => 'binary',
-                                    ],
-                                ],
-                            ],
-                        ],
-                    ],
-                ],
-            ],
-        ],
-    ],
-    itemOperations: [
-        'get' => [
-            'normalization_context' => ['groups' => ['read:Post:collection', 'read:Post:item', 'read:Post:User']],
-            // "security" => "is_granted('READ', object)",
-            // "security_message" => "Only auth user can access at this post.",
-        ],
-        'put' => [
-            // "security" => "is_granted('EDIT', object)",
-            // "security_message" => "Sorry, but you are not the post owner.",
-        ],
-        'delete' => [
-            // "security" => "is_granted('DELETE', object)",
-            // "security_message" => "Sorry, but you are not the post owner.",
-        ],
-    ],
-    denormalizationContext: [
-        ['groups' => ['write:Post']],
-    ],
-    normalizationContext: [
-        'groups' => ['read:Post:collection'],
-    ],
-    paginationItemsPerPage: 100,
-    paginationMaximumItemsPerPage: 10
-)
-]
 class Post
 {
     /**
@@ -73,31 +19,24 @@ class Post
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
      */
-    #[Groups(['read:Post:collection'])]
     private $id;
 
     /**
      * @ORM\Column(type="text", nullable=true)
      */
-    #[
-        Groups(['read:Post:collection', 'write:Post']),
-        Length(min: 3)
-    ]
     private $content;
 
     /**
      * @ORM\Column(type="datetime_immutable")
      * @Gedmo\Timestampable(on="create")
      */
-    #[Groups(['read:Post:collection'])]
     private $createdAt;
 
     /**
      * @ORM\Column(type="datetime_immutable", nullable=true)
      * @Gedmo\Timestampable(on="update")
      */
-    #[Groups(['read:Post:item'])]
-    private $updateAt;
+    private $updatedAt;
 
     /**
      * @ORM\Column(type="datetime_immutable", nullable=true)
@@ -109,20 +48,17 @@ class Post
      * @ORM\JoinColumn(nullable=false)
      * @Assert\NotBlank()
      */
-    #[Groups(['read:Post:collection', 'write:Post'])]
     private $image;
 
     /**
      * @var string|null
      */
-    #[Groups(['read:Post:collection'])]
     private ?string $imagePath;
 
     /**
      * @ORM\ManyToOne(targetEntity=User::class, inversedBy="posts")
      * @ORM\JoinColumn(nullable=false)
      */
-    #[Groups(['read:Post:collection'])]
     private $createdBy;
 
     public function getId(): ?int
@@ -154,14 +90,14 @@ class Post
         return $this;
     }
 
-    public function getUpdateAt(): ?\DateTimeImmutable
+    public function getUpdatedAt(): ?\DateTimeImmutable
     {
-        return $this->updateAt;
+        return $this->updatedAt;
     }
 
-    public function setUpdateAt(?\DateTimeImmutable $updateAt): self
+    public function setUpdatedAt(?\DateTimeImmutable $updatedAt): self
     {
-        $this->updateAt = $updateAt;
+        $this->updatedAt = $updatedAt;
 
         return $this;
     }

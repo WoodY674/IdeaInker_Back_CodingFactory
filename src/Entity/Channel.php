@@ -2,7 +2,6 @@
 
 namespace App\Entity;
 
-use ApiPlatform\Core\Annotation\ApiResource;
 use App\Repository\ChannelRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -13,9 +12,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 /**
  * @ORM\Entity(repositoryClass=ChannelRepository::class)
  */
-#[ApiResource(
-    normalizationContext: ['groups' => ['read:Channel:collection']]
-)]
+
 class Channel
 {
     /**
@@ -23,21 +20,18 @@ class Channel
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
      */
-    #[Groups(['read:Channel:collection'])]
     private $id;
 
     /**
      * @ORM\ManyToMany(targetEntity=User::class)
      * @Assert\NotBlank()
      */
-    #[Groups(['read:Channel:collection'])]
     private $usersInside;
 
     /**
      * @ORM\OneToMany(targetEntity=Message::class, mappedBy="channel")
      * @Assert\NotBlank()
      */
-    #[Groups(['read:Channel:collection'])]
     private $messages;
 
     public function __construct()

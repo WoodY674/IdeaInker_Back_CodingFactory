@@ -2,7 +2,6 @@
 
 namespace App\Entity;
 
-use ApiPlatform\Core\Annotation\ApiResource;
 use App\Repository\MeetingRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
@@ -11,31 +10,6 @@ use Symfony\Component\Validator\Constraints as Assert;
 /**
  * @ORM\Entity(repositoryClass=MeetingRepository::class)
  */
-#[ApiResource(
-    collectionOperations: [
-        'get',
-        'post' => [
-            // "security_post_denormalize" => "is_granted('CREATE', object)",
-            // "security_message" => "Only auth user can create.",
-        ],
-    ],
-    itemOperations: [
-        'get' => [
-            // "security" => "is_granted('READ', object)",
-            // "security_message" => "Only auth user can access at this meeting.",
-        ],
-        'put' => [
-            // "security" => "is_granted('EDIT', object)",
-            // "security_message" => "Sorry, but you are not the meeting owner.",
-        ],
-        'delete' => [
-            // "security" => "is_granted('DELETE', object)",
-            // "security_message" => "Sorry, but you are not the meeting owner.",
-        ],
-    ],
-    attributes: ['security' => "is_granted('ROLE_USER')"]
-)
-]
 class Meeting
 {
     /**

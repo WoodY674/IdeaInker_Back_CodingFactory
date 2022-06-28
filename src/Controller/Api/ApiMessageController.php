@@ -35,7 +35,7 @@ class ApiMessageController extends AbstractController
     #[Route('/', name: 'message_all', methods: ['GET'])]
     public function getAllMessage(): Response
     {
-        $messages = $this->messageRepository->findBy(['deletedAt' => null]);
+        $messages = $this->messageRepository->findBy(['deletedAt' => null], ['sendAt' => 'DESC']);
 
         return $this->apiService->getResponseForApi($messages);
     }

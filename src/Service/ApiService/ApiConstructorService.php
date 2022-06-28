@@ -173,4 +173,38 @@ class ApiConstructorService
         }
     }
     // endregion
+    /** par X raison impossible de prendre les metadatas obliger de les renseingner via un controller */
+    public function getSimpleDataFromEntity($entity, $metadata) {
+        if (is_array($entity) || gettype($entity) === 'object' && $entity::class === 'Doctrine\ORM\PersistentCollection') {
+            $data = [];
+            foreach ($entity as $value) {
+                $data[] = $this->getSimpleData($value, $metadata);
+            }
+            return $data;
+        } else {
+            return $this->getSimpleData($entity, $metadata);
+        }
+    }
+
+    private function getSimpleData($entity, $metadata) {
+        $fields = $metadata->fieldMappings;
+        $data = [];
+        foreach ($fields as $key => $value) {
+            $methods = $this->createMethods($value['fieldName']);
+            if($value['type'] === 'datetime_immutable') {
+                $date = $entity->$methods();
+                if($date !== null) {
+                    $data[$key] = $date->format('d-m-Y');
+                }
+            } else {
+                $data[$key] = $entity->$methods();
+            }
+        }
+
+        return $data;
+    }
+
+    private function createMethods($name) {
+        return 'get' . ucfirst($name);
+    }
 }

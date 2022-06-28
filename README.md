@@ -20,12 +20,3 @@ or
 ### Generate JWT certificate
     
     bin/console lexik:jwt:generate-keypair
-
-### Api
-Currently 2 routes for api are available
-for ApiPlatform :
-
-    /api/
-the custom api eventually it will replace apiplatform
-
-    /api2/

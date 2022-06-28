@@ -2,8 +2,6 @@
 
 namespace App\Entity;
 
-use ApiPlatform\Core\Annotation\ApiResource;
-use App\Controller\MeController;
 use App\Repository\UserRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -11,38 +9,11 @@ use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
-use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
-use Symfony\Component\Validator\Constraints\Length;
 
 /**
  * @ORM\Entity(repositoryClass=UserRepository::class)
  */
-#[ApiResource(
-    collectionOperations: [
-        'me' => [
-            'pagination_enable' => false,
-            'path' => '/me',
-            'method' => 'get',
-            'controller' => MeController::class,
-            'read' => false,
-            'openapi_context' => [
-                'security' => [['bearerAuth' => []]],
-            ],
-        ],
-        'post' => [
-            'path' => '/register',
-        ],
-    ],
-    itemOperations: [
-        'get',
-        'put',
-    ],
-    normalizationContext: ['read:User:collection'],
-    // security: 'is_granted("ROLE_USER")'
-    // attributes: ["security" => "is_granted('ROLE_USER')"]
-)
-]
 class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
     /**
@@ -50,24 +21,21 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
      */
-    #[Groups(['read:User:collection'])]
     private $id;
+    const ID = 'user_id';
 
     /**
      * @ORM\Column(type="string", length=180, unique=true)
      * @Assert\NotBlank()
      */
-    #[
-        Groups(['read:User:collection', 'read:Channel:collection']),
-        Length(min: 3)
-    ]
     private $email;
+    const EMAIL = "email";
 
     /**
      * @ORM\Column(type="json")
      */
-    #[Groups(['read:User:collection'])]
     private $roles = [];
+    const ROLES = "roles";
 
     /**
      * @var string The hashed password
@@ -75,78 +43,88 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      * @Assert\NotBlank()
      */
     private $password;
+    const PASSWORD = "password";
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
      */
     private $lastName;
+    const LAST_NAME = "last_name";
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
      */
-    #[Groups(['read:User:collection'])]
     private $firstName;
+    const FIRST_NAME = "first_name";
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
      */
-    #[Groups(['read:User:collection'])]
     private $address;
+    const ADDRESS = "address";
 
     /**
      * @ORM\Column(type="string", length=15, nullable=true)
      */
     private $zipCode;
+    const ZIP_CODE = "zip_code";
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
      */
     private $city;
+    const CITY = "city";
 
     /**
      * @ORM\Column(type="datetime", nullable=true)
      */
     private $birthday;
+    const BIRTHDAY = "birthday";
 
     /**
      * @ORM\Column(type="datetime_immutable")
      * @Gedmo\Timestampable(on="create")
      */
     private $createdAt;
+    const CREATED_AT = "created_at";
 
     /**
      * @ORM\Column(type="datetime_immutable", nullable=true)
      */
     private $deletedAt;
+    const DELETE_AT = "delete_at";
+
+    /**
+     * @ORM\Column(type="string", length=255, unique=true).
+     *
+     * @Assert\NotBlank()
+     */
+    private $pseudo;
+    const PSEUDO = "pseudo";
 
     /**
      * @ORM\OneToMany(targetEntity=Message::class, mappedBy="sendBy")
      */
     private $messages;
+    const MESSAGES = "messages";
 
     /**
      * @ORM\OneToMany(targetEntity=Salon::class, mappedBy="manager")
      */
     private $salons;
+    const SALONS = "salons";
 
     /**
      * @ORM\OneToOne(targetEntity=Image::class, cascade={"persist", "remove"})
      */
-    #[Groups(['read:User:collection'])]
     private $profileImage;
+    const PROFILE_IMAGE = "profile_image";
 
     /**
      * @ORM\OneToMany(targetEntity=Post::class, mappedBy="createdBy")
      */
     private $posts;
-
-    /**
-     * ORM\Column(type="string", length=255, unique=true).
-     *
-     * @Assert\NotBlank()
-     */
-    #[Groups(['read:Post:User'])]
-    private $pseudo;
+    const POSTS = "posts";
 
     public function __construct()
     {
@@ -268,7 +246,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    public function getAdress(): ?string
+    public function getAddress(): ?string
     {
         return $this->address;
     }
