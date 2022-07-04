@@ -103,7 +103,7 @@ class ApiConstructorService
 
                 return $uploadApiModel;
             } else {
-                dd('is empty');
+                return json_decode($request->getContent(), true);
                 // ToDo: aucune entity à été renseigné donc l'entity ne se remplira pas automatiquement
             }
         } else {
@@ -167,9 +167,11 @@ class ApiConstructorService
         if (is_array($images)) {
             foreach ($images as $image) {
                 $this->entityManager->persist($image);
+                $image->unsetImageFile();
             }
         } else {
             $this->entityManager->persist($images);
+            $images->unsetImageFile();
         }
     }
     // endregion
@@ -206,5 +208,47 @@ class ApiConstructorService
 
     private function createMethods($name) {
         return 'get' . ucfirst($name);
+    }
+
+    public function getGetFunctionFromJsonKey(array $jsonKey, string $classEntity){
+        $listOfMethods = [];
+        $allMethodInEntity = get_class_methods($classEntity);
+        foreach ($jsonKey as $key => $jsonKey) {
+            $method = 'get' . ucfirst($this->replaceKeyJsonByProperties($jsonKey));
+            if (in_array($method, $allMethodInEntity)) {
+                $listOfMethods[$key] = $method;
+            }
+        }
+        return $listOfMethods;
+    }
+
+    public function getSetFunctionFromJsonKey(array $jsonKey, string $classEntity){
+        $listOfMethods = [];
+        $allMethodInEntity = get_class_methods($classEntity);
+        foreach ($jsonKey as $key => $jsonKey) {
+            $method = 'set' . ucfirst($this->replaceKeyJsonByProperties($jsonKey));
+            if (in_array($method, $allMethodInEntity)) {
+                $listOfMethods[$key] = $method;
+            }
+        }
+        return $listOfMethods;
+    }
+
+    public function replaceKeyJsonByProperties($keyJson) {
+        $partOfStrings = explode("_", $keyJson);
+        if(count($partOfStrings) > 1) {
+            return $keyJson;
+        } else {
+            $nameProperties = "";
+            for ($i = 0; $i < count($partOfStrings); ++$i) {
+                if($i === 0) {
+                    $nameProperties .= $partOfStrings[$i];
+                } else {
+                    $nameProperties .= ucfirst($partOfStrings[$i]);
+
+                }
+            }
+            return $nameProperties;
+        }
     }
 }

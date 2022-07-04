@@ -9,10 +9,12 @@ use App\Service\ImageService\Base64Utils\UploadedBase64File;
 class ImageCreatorService
 {
     private Base64FileExtractor $base64FileExtractor;
+    private $targetDirectory;
 
-    public function __construct(Base64FileExtractor $base64FileExtractor)
+    public function __construct($targetDirectory, Base64FileExtractor $base64FileExtractor)
     {
         $this->base64FileExtractor = $base64FileExtractor;
+        $this->targetDirectory = $targetDirectory;
     }
 
     /**
@@ -25,7 +27,7 @@ class ImageCreatorService
         if (is_array($rawImage64)) {
             $images = [];
             foreach ($rawImage64 as $image64) {
-                $images[] = $this->imageString64($image64);
+                $images[] = $this->imageString64($image64[Image::IMAGE_FILE]);
             }
 
             return $images;
@@ -49,9 +51,10 @@ class ImageCreatorService
         $base64Image = $this->base64FileExtractor->extractBase64String($image64);
         $formatType = explode('/', $base64Image[0]);
         $imageFile = new UploadedBase64File($base64Image[1], $this->setUniqueName().'.'.$formatType[1]);
+        $imageFile->moveTo($this->targetDirectory);
         $image = new Image();
         $image->setImageFile($imageFile);
-
+        $image->setImageName($imageFile->getClientOriginalName());
         return $image;
     }
 

@@ -24,7 +24,7 @@ class Image
      * @var ?File
      */
     private ?File $imageFile;
-
+    const IMAGE_FILE = "image_file";
     /**
      * @ORM\Column(type="string", length=255)
      */
@@ -94,5 +94,9 @@ class Image
         $this->imagePath = '/assets/img/posting_image/'.$imagePath;
 
         return $this;
+    }
+
+    public function unsetImageFile() {
+        unset($this->imageFile);
     }
 }

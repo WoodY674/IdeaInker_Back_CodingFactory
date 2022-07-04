@@ -20,4 +20,8 @@ class UploadedBase64File extends UploadedFile
 
         parent::__construct($filePath, $originalName, $mimeType, $error, $test);
     }
+
+    public function moveTo($directory) {
+        $this->move($directory, $this->getClientOriginalName());
+    }
 }

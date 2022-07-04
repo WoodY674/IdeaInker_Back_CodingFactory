@@ -20,3 +20,23 @@ or
 ### Generate JWT certificate
     
     bin/console lexik:jwt:generate-keypair
+
+# Api
+
+### post
+
+```json
+{
+  "post_id": "",
+  "content": "",
+  "created_at": "",
+  "updated_at": "",
+  "deleted_at": "",
+  "image": [
+    {
+      "image_file": "base64"
+    }
+  ],
+  "created_by": "id_user"
+}
+```
