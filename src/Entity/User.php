@@ -126,11 +126,24 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private $posts;
     const POSTS = "posts";
 
+    /**
+     * @ORM\ManyToMany(targetEntity=Salon::class, mappedBy="artists")
+     */
+    private $workingSalon;
+    const WORKING_SALON = "working_salon";
+
+    /**
+     * @ORM\OneToMany(targetEntity=Notice::class, mappedBy="userNoted")
+     */
+    private $notices;
+    const NOTICES = 'notices';
+
     public function __construct()
     {
         $this->messages = new ArrayCollection();
         $this->salons = new ArrayCollection();
         $this->posts = new ArrayCollection();
+        $this->workingSalon = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -428,6 +441,63 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setPseudo(string $pseudo): self
     {
         $this->pseudo = $pseudo;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Salon>
+     */
+    public function getWorkingSalon(): Collection
+    {
+        return $this->workingSalon;
+    }
+
+    public function addWorkingSalon(Salon $workingSalon): self
+    {
+        if (!$this->workingSalon->contains($workingSalon)) {
+            $this->workingSalon[] = $workingSalon;
+            $workingSalon->addArtist($this);
+        }
+
+        return $this;
+    }
+
+    public function removeWorkingSalon(Salon $workingSalon): self
+    {
+        if ($this->workingSalon->removeElement($workingSalon)) {
+            $workingSalon->removeArtist($this);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Notice>
+     */
+    public function getNotices(): Collection
+    {
+        return $this->notices;
+    }
+
+    public function addNotice(Notice $notice): self
+    {
+        if (!$this->notices->contains($notice)) {
+            $this->notices[] = $notice;
+            $notice->setSalonNoted($this);
+        }
+
+        return $this;
+    }
+
+    public function removeNotice(Notice $notice): self
+    {
+        if ($this->notices->removeElement($notice)) {
+            // set the owning side to null (unless already changed)
+            if ($notice->getSalonNoted() === $this) {
+                $notice->setSalonNoted(null);
+            }
+        }
 
         return $this;
     }

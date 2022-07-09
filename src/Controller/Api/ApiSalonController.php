@@ -3,6 +3,7 @@
 namespace App\Controller\Api;
 
 use App\Entity\Image;
+use App\Entity\Notice;
 use App\Entity\Salon;
 use App\Entity\User;
 use App\Repository\SalonRepository;
@@ -100,11 +101,93 @@ class ApiSalonController extends AbstractController
                     $this->entityManager->persist($newImage);
                     $salon->$method($json[$key]);
                 }
+            } elseif($key === Salon::ARTISTS) {
+                foreach ($json[$key] as $artist) {
+                    $artistUser = $this->userRepository->findOneBy(['id' => $artist]);
+                    if($artistUser) {
+                        $salon->addArtist($artistUser);
+                    }
+                }
+            } else {
+                $salon->$method($json[$key]);
             }
-            $salon->$method($json[$key]);
         }
         $this->entityManager->flush();
         return $this->apiService->getResponseForApi($salon);
+    }
+    #[Route('/{id}/add/artist/{artistId}', name: 'salon_add_one_artist', methods: ['PATCH'])]
+    public function addOneArtist($id, $artistId): Response
+    {
+        $salon = $this->salonRepository->findOneBy(['id' => $id]);
+        if ($salon) {
+            $artistUser = $this->userRepository->findOneBy(['id' => $artistId]);
+            if($artistUser) {
+                $salon->addArtist($artistUser);
+                $this->entityManager->flush();
+                return $this->apiService->getResponseForApi($salon);
+            } else {
+                return $this->json('erreur artist non trouvé', 402);
+            }
+        } else {
+            return $this->json('erreur salon non trouvé', 402);
+        }
+    }
+
+    #[Route('/{id}/add/artists/', name: 'salon_add_Many_artist', methods: ['PATCH'])]
+    public function addManyArtist($id, Request $request): Response
+    {
+        $json = $this->apiService->getJsonBodyFromRequest($request);
+
+        $salon = $this->salonRepository->findOneBy(['id' => $id]);
+        if ($salon && key_exists(Salon::ARTISTS, $json)) {
+            foreach ($json[Salon::ARTISTS] as $artistId) {
+                $artistUser = $this->userRepository->findOneBy(['id' => $artistId]);
+                if($artistUser) {
+                    $salon->addArtist($artistUser);
+                }
+            }
+            $this->entityManager->flush();
+            return $this->apiService->getResponseForApi($salon);
+        } else {
+            return $this->json('erreur salon non trouvé', 402);
+        }
+    }
+    #[Route('/{id}/remove/artist/{artistId}', name: 'salon_remove_one_artist', methods: ['PATCH'])]
+    public function removeOneArtist($id, $artistId): Response
+    {
+        $salon = $this->salonRepository->findOneBy(['id' => $id]);
+        if ($salon) {
+            $artistUser = $this->userRepository->findOneBy(['id' => $artistId]);
+            if($artistUser) {
+                $salon->removeArtist($artistUser);
+                $this->entityManager->flush();
+                return $this->apiService->getResponseForApi($salon);
+            } else {
+                return $this->json('erreur artist non trouvé', 402);
+            }
+        } else {
+            return $this->json('erreur salon non trouvé', 402);
+        }
+    }
+
+    #[Route('/{id}/remove/artists/', name: 'salon_remove_Many_artist', methods: ['PATCH'])]
+    public function removeManyArtist($id, Request $request): Response
+    {
+        $json = $this->apiService->getJsonBodyFromRequest($request);
+
+        $salon = $this->salonRepository->findOneBy(['id' => $id]);
+        if ($salon && key_exists(Salon::ARTISTS, $json)) {
+            foreach ($json[Salon::ARTISTS] as $artistId) {
+                $artistUser = $this->userRepository->findOneBy(['id' => $artistId]);
+                if($artistUser) {
+                    $salon->removeArtist($artistUser);
+                }
+            }
+            $this->entityManager->flush();
+            return $this->apiService->getResponseForApi($salon);
+        } else {
+            return $this->json('erreur salon non trouvé', 402);
+        }
     }
 
     #[Route('/{id}', name: 'salon_update', methods: ['PATCH'])]
@@ -160,6 +243,40 @@ class ApiSalonController extends AbstractController
 
         } else {
             $data[Salon::MANAGER] = null;
+        }
+
+        $artists = $salon->getArtists();
+        if(isset($artists)) {
+            $metadataImage = $this->getDoctrine()->getManager()->getMetadataFactory()->getMetadataFor(User::class);
+            foreach ($artists as $key => $artist) {
+                $data[Salon::ARTISTS][$key] = $this->apiService->getSimpleDataFromEntity($manager, $metadataImage);
+                unset($data[Salon::ARTISTS][$key]['password']);
+                unset($data[Salon::ARTISTS][$key]['roles']);
+                $imageManager = $manager->getProfileImage();
+                if(isset($imageManager)) {
+                    $metadataImage = $this->getDoctrine()->getManager()->getMetadataFactory()->getMetadataFor(Image::class);
+                    $data[Salon::ARTISTS][$key][User::PROFILE_IMAGE] = $this->apiService->getSimpleDataFromEntity($imageManager, $metadataImage);
+                } else {
+                    $data[Salon::ARTISTS][$key][User::PROFILE_IMAGE] = null;
+                }
+            }
+        } else {
+            $data[Salon::ARTISTS] = null;
+        }
+
+        $notices = $salon->getNotices();
+        if (isset($notices)) {
+            $starsAll = 0;
+            foreach ($notices as $key => $notice) {
+                $data[Salon::NOTICES][Salon::NOTICES][] = [
+                    Notice::ID => $notice->getId(),
+                    Notice::STARS => $notice->getStars(),
+                    Notice::COMMENT => $notice->getComment(),
+                ];
+                $starsAll += $notice->getStars();
+            }
+            $result = $starsAll / count($notices);
+            $data[Salon::NOTICES]['average'] = $result;
         }
 
         return $data;

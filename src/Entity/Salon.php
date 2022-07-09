@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\SalonRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -97,6 +99,24 @@ class Salon {
      */
     private $longitude;
     const LONGITUDE = "longitude";
+
+    /**
+     * @ORM\ManyToMany(targetEntity=User::class, inversedBy="workingSalon")
+     */
+    private $artists;
+    const ARTISTS = 'artists';
+
+    /**
+     * @ORM\OneToMany(targetEntity=Notice::class, mappedBy="salonNoted")
+     */
+    private $notices;
+    const NOTICES = 'notices';
+
+    public function __construct()
+    {
+        $this->artists = new ArrayCollection();
+        $this->notices = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -231,6 +251,60 @@ class Salon {
     public function setLongitude(string $longitude): self
     {
         $this->longitude = $longitude;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, User>
+     */
+    public function getArtists(): Collection
+    {
+        return $this->artists;
+    }
+
+    public function addArtist(User $artist): self
+    {
+        if (!$this->artists->contains($artist)) {
+            $this->artists[] = $artist;
+        }
+
+        return $this;
+    }
+
+    public function removeArtist(User $artist): self
+    {
+        $this->artists->removeElement($artist);
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Notice>
+     */
+    public function getNotices(): Collection
+    {
+        return $this->notices;
+    }
+
+    public function addNotice(Notice $notice): self
+    {
+        if (!$this->notices->contains($notice)) {
+            $this->notices[] = $notice;
+            $notice->setSalonNoted($this);
+        }
+
+        return $this;
+    }
+
+    public function removeNotice(Notice $notice): self
+    {
+        if ($this->notices->removeElement($notice)) {
+            // set the owning side to null (unless already changed)
+            if ($notice->getSalonNoted() === $this) {
+                $notice->setSalonNoted(null);
+            }
+        }
 
         return $this;
     }
