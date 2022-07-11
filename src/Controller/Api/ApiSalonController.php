@@ -265,10 +265,10 @@ class ApiSalonController extends AbstractController
         }
 
         $notices = $salon->getNotices();
-        if (isset($notices)) {
+        if (isset($notices) && count($notices) > 0) {
             $starsAll = 0;
-            foreach ($notices as $key => $notice) {
-                $data[Salon::NOTICES][Salon::NOTICES][] = [
+            foreach ($notices as  $notice) {
+                $data[Salon::NOTICES]['all_notices'][] = [
                     Notice::ID => $notice->getId(),
                     Notice::STARS => $notice->getStars(),
                     Notice::COMMENT => $notice->getComment(),

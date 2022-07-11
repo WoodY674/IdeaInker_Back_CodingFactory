@@ -36,7 +36,7 @@ class ApiNoticeController extends AbstractController
     public function newSalon(Request $request): Response
     {
         $json = $this->apiService->getJsonBodyFromRequest($request);
-        if(!isset($json[Notice::USER_NOTED]) && isset($json[Notice::USER_NOTING]) || isset($json[Notice::SALON_NOTED])) {
+        if(!isset($json[Notice::USER_NOTING])) {
             return $this->json('Donnée manquante', 405);
         }
 
@@ -44,14 +44,15 @@ class ApiNoticeController extends AbstractController
         if(isset($userNoting)) {
             $notice = $this->apiService->getJsonBodyFromRequest($request, Notice::class);
             $notice->setUserNoting($userNoting);
-            if (!isset($json[Notice::USER_NOTING])) {
+
+            if (key_exists(Notice::USER_NOTED, $json) && isset($json[Notice::USER_NOTED])) {
                 $userNoted = $this->userRepository->findOneBy(['id' => $json[Notice::USER_NOTED]]);
                 if(!$userNoted) {
                     return $this->json('erreur relation non trouvé');
                 }
                 $notice->setUserNoted($userNoted);
-            } elseif (!isset($json[Notice::SALON_NOTED])) {
-                $salonNoted = $this->salonRepository->findOneBy(['id' => $json[Notice::USER_NOTED]]);
+            } elseif (key_exists(Notice::SALON_NOTED, $json) && isset($json[Notice::SALON_NOTED])) {
+                $salonNoted = $this->salonRepository->findOneBy(['id' => $json[Notice::SALON_NOTED]]);
                 if(!$salonNoted) {
                     return $this->json('erreur relation non trouvé');
                 }
@@ -59,7 +60,7 @@ class ApiNoticeController extends AbstractController
             }
             $this->entityManager->persist($notice);
             $this->entityManager->flush();
-            return $this->apiService->getResponseForApi($notice);
+            return $this->json('cest bon mon reuf', 201);
         } else {
             return $this->json('User non trouvé', 405);
         }

@@ -27,12 +27,19 @@ class Channel
      * @Assert\NotBlank()
      */
     private $usersInside;
-
+    const USER_INSIDE = 'user_inside';
     /**
      * @ORM\OneToMany(targetEntity=Message::class, mappedBy="channel")
      * @Assert\NotBlank()
      */
     private $messages;
+    const MESSAGES = 'messages';
+    const LAST_MESSAGE = 'last_message';
+    /**
+     * @ORM\Column(type="string", length=255)
+     */
+    private $title;
+    const TITLE = 'title';
 
     public function __construct()
     {
@@ -95,6 +102,18 @@ class Channel
                 $message->setChannel(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getTitle(): ?string
+    {
+        return $this->title;
+    }
+
+    public function setTitle(string $title): self
+    {
+        $this->title = $title;
 
         return $this;
     }

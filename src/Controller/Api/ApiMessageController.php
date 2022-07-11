@@ -9,10 +9,11 @@ use App\Repository\UserRepository;
 use App\Service\ApiService\ApiConstructorService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
-#[Route('/api2/message')]
+#[Route('/api/message')]
 class ApiMessageController extends AbstractController
 {
     private EntityManagerInterface $entityManager;
@@ -35,15 +36,14 @@ class ApiMessageController extends AbstractController
     #[Route('/', name: 'message_all', methods: ['GET'])]
     public function getAllMessage(): Response
     {
-        $messages = $this->messageRepository->findBy(['deletedAt' => null], ['sendAt' => 'DESC']);
 
-        return $this->apiService->getResponseForApi($messages);
+        return $this->apiService->getResponseForApi(null);
     }
 
     #[Route('/{id}', name: 'message_show', methods: ['GET'])]
     public function getOneMessage($id): Response
     {
-        $message = $this->messageRepository->findOneBy(['id' => $id, 'deletedAt' => null]);
+        $message = $this->messageRepository->findOneBy(['id' => $id]);
 
         return $this->apiService->getResponseForApi($message);
     }
@@ -57,31 +57,13 @@ class ApiMessageController extends AbstractController
     }
 
     #[Route('/', name: 'message_new', methods: ['POST'])]
-    public function newMessage(): Response
+    public function newMessage(Request $request): Response
     {
-        try {
-            $response = $this->apiService->getJsonBodyFromRequest();
-            if (!empty($request)) {
-                throw new \Exception();
-            }
-            $user = $this->userRepository->findOneBy(['id' => $response['manager'], 'deletedAt' => null]);
-            if (!$user) {
-                throw new \Exception();
-            }
+        $message = $this->apiService->getJsonBodyFromRequest($request, Message::class);
+        $this->entityManager->persist($message);
+        $this->entityManager->flush();
 
-            $image = new Image();
-            $image->setImage($response['image']);
-            $this->entityManager->persist($image);
-
-            $message = new Message();
-
-            $this->entityManager->persist($message);
-            $this->entityManager->flush();
-
-            return $this->apiService->getResponseForApi($user);
-        } catch (\Exception $exception) {
-            return $this->apiService->getResponseForApi('Data no valid or user not found')->setStatusCode(422);
-        }
+        return $this->apiService->getResponseForApi($message);
     }
 
     #[Route('/{id}', name: 'message_replace', methods: ['PUT'])]

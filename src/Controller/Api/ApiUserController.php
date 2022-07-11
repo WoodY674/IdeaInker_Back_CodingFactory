@@ -117,11 +117,11 @@ class ApiUserController extends AbstractController
             $data[User::WORKING_SALON] = null;
         }
 
-        $notices = $salon->getNotices();
+        $notices = $user->getNotices();
         if (isset($notices) && count($notices) > 0) {
             $starsAll = 0;
             foreach ($notices as $notice) {
-                $data[Salon::NOTICES][Salon::NOTICES][] = [
+                $data[User::NOTICES]['all_notices'][] = [
                     Notice::ID => $notice->getId(),
                     Notice::STARS => $notice->getStars(),
                     Notice::COMMENT => $notice->getComment(),
