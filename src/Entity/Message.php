@@ -21,22 +21,26 @@ class Message
      * @ORM\Column(type="integer")
      */
     private $id;
+    const ID_MESSAGE = "id_message";
 
     /**
      * @ORM\Column(type="text", nullable=true)
      */
     private $message;
+    const MESSAGE = "message";
 
     /**
      * @ORM\Column(type="datetime_immutable")
      * @Gedmo\Timestampable(on="create")
      */
     private $sendAt;
+    const SEND_AT = "send_at";
 
     /**
      * @ORM\Column(type="datetime_immutable", nullable=true)
      */
     private $reedAt;
+    const REED_AT = "reed_at";
 
     /**
      * @ORM\ManyToOne(targetEntity=User::class, inversedBy="messages")
@@ -44,6 +48,7 @@ class Message
      * @Assert\NotBlank()
      */
     private $sendBy;
+    const SEND_BY = "send_by";
 
     /**
      * @ORM\ManyToOne(targetEntity=User::class)
@@ -51,11 +56,13 @@ class Message
      * @Assert\NotBlank()
      */
     private $recipient;
+    const RECIPIENT = "recipient";
 
     /**
      * @ORM\ManyToMany(targetEntity=Image::class)
      */
     private $attachment;
+    const ATTACHMENT = "attachment";
 
     /**
      * @ORM\ManyToOne(targetEntity=Channel::class, inversedBy="messages")

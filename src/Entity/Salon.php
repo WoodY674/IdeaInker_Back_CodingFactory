@@ -112,10 +112,17 @@ class Salon {
     private $notices;
     const NOTICES = 'notices';
 
+    /**
+     * @ORM\OneToMany(targetEntity=Post::class, mappedBy="salon")
+     */
+    private $posts;
+    const POSTS = 'posts';
+
     public function __construct()
     {
         $this->artists = new ArrayCollection();
         $this->notices = new ArrayCollection();
+        $this->posts = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -303,6 +310,36 @@ class Salon {
             // set the owning side to null (unless already changed)
             if ($notice->getSalonNoted() === $this) {
                 $notice->setSalonNoted(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Post>
+     */
+    public function getPosts(): Collection
+    {
+        return $this->posts;
+    }
+
+    public function addPost(Post $post): self
+    {
+        if (!$this->posts->contains($post)) {
+            $this->posts[] = $post;
+            $post->setSalon($this);
+        }
+
+        return $this;
+    }
+
+    public function removePost(Post $post): self
+    {
+        if ($this->posts->removeElement($post)) {
+            // set the owning side to null (unless already changed)
+            if ($post->getSalon() === $this) {
+                $post->setSalon(null);
             }
         }
 

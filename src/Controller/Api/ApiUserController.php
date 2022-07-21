@@ -7,6 +7,7 @@ use App\Entity\Salon;
 use App\Entity\User;
 use App\Repository\UserRepository;
 use App\Service\ApiService\ApiConstructorService;
+use App\Service\ImageService\ImageCreatorService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -21,17 +22,19 @@ class ApiUserController extends AbstractController
     private ApiConstructorService $apiConstructorService;
     private UserRepository $userRepository;
     private EntityManagerInterface $entityManager;
+    private ImageCreatorService $imageCreatorService;
 
-    public function __construct(ApiConstructorService $apiConstructorService, UserRepository $userRepository, EntityManagerInterface $entityManager) {
+    public function __construct(ApiConstructorService $apiConstructorService, UserRepository $userRepository, EntityManagerInterface $entityManager, ImageCreatorService $imageCreatorService) {
         $this->apiConstructorService = $apiConstructorService;
         $this->userRepository = $userRepository;
         $this->entityManager = $entityManager;
+        $this->imageCreatorService = $imageCreatorService;
     }
 
     #[Route('/me', name: 'me', methods: ['GET'])]
     public function userMe(): Response {
         if($this->getUser() === null) {
-            return $this->json("not connected", "403");
+            return $this->json("not connected", 405);
         }
 
         $user = $this->getUser();
@@ -48,10 +51,35 @@ class ApiUserController extends AbstractController
             $this->entityManager->persist($user);
             $this->entityManager->flush();
         } catch (\Exception $exception){
-            return $this->json($exception);
+            $this->json("information manquante ou pseudo déjà utilisé ou email déjà utlisé", 403);
         }
-        return $this->apiConstructorService->getResponseForApi($user);
+        return $this->json("", 201);
+    }
 
+    #[Route('/{id}', name: 'modify', methods: ['PATCH'])]
+    public function modifyuser($id, Request $request) {
+        $user = $this->userRepository->findOneBy(['id' => $id]);
+        if (!$user) {
+            return $this->json('error user not found', '405');
+        }
+
+        $json = $this->apiConstructorService->getJsonBodyFromRequest($request);
+        $allMethods = $this->apiConstructorService->getSetFunctionFromJsonKey(array_keys($json), $user::class);
+        foreach ($allMethods as $key => $method) {
+            if($key === User::PROFILE_IMAGE) {
+                try {
+                    $newImage = $this->imageCreatorService->convertImages64ToEntity($json[$key]);
+                    $this->entityManager->persist($newImage);
+                    $user->$method($newImage);
+                } catch (\Exception $e) {
+                    continue;
+                }
+            } else {
+                $user->$method($json[$key]);
+            }
+        }
+        $this->entityManager->flush();
+        return $this->json("tkt c'est bon");
     }
 
     #[Route('/{id}', name: 'getOneUser', methods: ['GET'])]
@@ -129,7 +157,7 @@ class ApiUserController extends AbstractController
                 $starsAll += $notice->getStars();
             }
             $result = $starsAll / count($notices);
-            $data[Salon::NOTICES]['average'] = $result;
+            $data[Salon::NOTICES]['average'] = number_format((float)$result, 1, '.', '');
         }
 
         return $data;

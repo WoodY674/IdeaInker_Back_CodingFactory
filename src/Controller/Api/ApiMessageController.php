@@ -4,6 +4,8 @@ namespace App\Controller\Api;
 
 use App\Entity\Image;
 use App\Entity\Message;
+use App\Entity\User;
+use App\Repository\ChannelRepository;
 use App\Repository\MessageRepository;
 use App\Repository\UserRepository;
 use App\Service\ApiService\ApiConstructorService;
@@ -13,69 +15,52 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
-#[Route('/api/message')]
+#[Route('/api/messages')]
 class ApiMessageController extends AbstractController
 {
     private EntityManagerInterface $entityManager;
     private MessageRepository $messageRepository;
     private UserRepository $userRepository;
     private ApiConstructorService $apiService;
+    private ChannelRepository $channelRepository;
 
     public function __construct(
         MessageRepository $messageRepository,
         UserRepository $userRepository,
         EntityManagerInterface $entityManager,
-        ApiConstructorService $apiService)
+        ApiConstructorService $apiService,
+        ChannelRepository $channelRepository)
     {
         $this->messageRepository = $messageRepository;
         $this->entityManager = $entityManager;
         $this->apiService = $apiService;
         $this->userRepository = $userRepository;
+        $this->channelRepository = $channelRepository;
     }
 
-    #[Route('/', name: 'message_all', methods: ['GET'])]
-    public function getAllMessage(): Response
+    #[Route('/{id}', name: 'get_message_by_id_channel', methods: ['GET'])]
+    public function getMessageByChannel($id): Response
     {
-
-        return $this->apiService->getResponseForApi(null);
+        $messages = $this->messageRepository->findBy(['channel' => $id], ['sendAt' => 'DESC']);
+        $data = [];
+        foreach ($messages as $key => $message) {
+            $data[$key] = $this->getMessageInformation($message);
+        }
+        return $this->apiService->getResponseForApi($data);
     }
 
-    #[Route('/{id}', name: 'message_show', methods: ['GET'])]
-    public function getOneMessage($id): Response
+    #[Route('/{id}', name: 'new_message', methods: ['POST'])]
+    public function newMesage($id, Request $request): Response
     {
-        $message = $this->messageRepository->findOneBy(['id' => $id]);
-
-        return $this->apiService->getResponseForApi($message);
-    }
-
-    #[Route('/sendBy', name: 'message_show_sender', methods: ['GET'])]
-    public function getMessageBySender($sendBy): Response
-    {
-        $message = $this->messageRepository->findBy(['sendBy' => '1', 'deletedAt' => null]);
-
-        return $this->apiService->getResponseForApi($message);
-    }
-
-    #[Route('/', name: 'message_new', methods: ['POST'])]
-    public function newMessage(Request $request): Response
-    {
+        $channel = $this->channelRepository->findOneBy(['id' => $id]);
+        if(!$channel) {
+            return $this->json('channel non trouvé');
+        }
         $message = $this->apiService->getJsonBodyFromRequest($request, Message::class);
+        $message->setSendBy($this->getUser());
         $this->entityManager->persist($message);
         $this->entityManager->flush();
-
-        return $this->apiService->getResponseForApi($message);
-    }
-
-    #[Route('/{id}', name: 'message_replace', methods: ['PUT'])]
-    public function replaceMessage(): Response
-    {
-        return $this->json('message message');
-    }
-
-    #[Route('/{id}', name: 'message_update', methods: ['PATCH'])]
-    public function updateMessage(): Response
-    {
-        return $this->json('message message');
+        return $this->json('OK', 201);
     }
 
     #[Route('/{id}', name: 'message_delete', methods: ['DELETE'])]
@@ -94,5 +79,30 @@ class ApiMessageController extends AbstractController
         } catch (\Exception $exception) {
             return $this->apiService->getResponseForApi('Message not found')->setStatusCode(404);
         }
+    }
+
+    public function getMessageInformation($message) {
+        $metadataMessage = $this->getDoctrine()->getManager()->getMetadataFactory()->getMetadataFor(Message::class);
+        $data = $this->apiService->getSimpleDataFromEntity($message, $metadataMessage);
+
+        $sendBy = $message->getSendBy();
+        if(isset($sendBy)) {
+            $metadataImage = $this->getDoctrine()->getManager()->getMetadataFactory()->getMetadataFor(User::class);
+            $data[Message::SEND_BY] = $this->apiService->getSimpleDataFromEntity($sendBy, $metadataImage);
+            unset($data[Message::SEND_BY]['password']);
+            unset($data[Message::SEND_BY]['roles']);
+            $imageSendBy = $sendBy->getProfileImage();
+            if(isset($imageSendBy)) {
+                $metadataImage = $this->getDoctrine()->getManager()->getMetadataFactory()->getMetadataFor(Image::class);
+                $data[Message::SEND_BY][User::PROFILE_IMAGE] = $this->apiService->getSimpleDataFromEntity($imageSendBy, $metadataImage);
+            } else {
+                $data[Message::SEND_BY][User::PROFILE_IMAGE] = null;
+            }
+
+        } else {
+            $data[Message::SEND_BY] = null;
+        }
+
+        return $data;
     }
 }

@@ -4,10 +4,13 @@ namespace App\Controller\Api;
 
 use App\Entity\Image;
 use App\Entity\Post;
+use App\Entity\Salon;
 use App\Entity\User;
 use App\Repository\PostRepository;
+use App\Repository\SalonRepository;
 use App\Repository\UserRepository;
 use App\Service\ApiService\ApiConstructorService;
+use App\Service\fetchInformationEntity;
 use App\Service\ImageService\ImageCreatorService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -24,19 +27,23 @@ class ApiPostController extends AbstractController
     private UserRepository $userRepository;
     private ApiConstructorService $apiService;
     private ImageCreatorService $imageCreatorService;
+    private fetchInformationEntity $fetchInformationEntity;
+    private SalonRepository $salonRepository;
 
     public function __construct(
         PostRepository $postRepository,
         UserRepository $userRepository,
         EntityManagerInterface $entityManager,
         ApiConstructorService $apiService,
-        ImageCreatorService $imageCreatorService
+        ImageCreatorService $imageCreatorService,fetchInformationEntity $fetchInformationEntity, SalonRepository $salonRepository
     ) {
         $this->postRepository = $postRepository;
         $this->entityManager = $entityManager;
         $this->apiService = $apiService;
         $this->userRepository = $userRepository;
         $this->imageCreatorService = $imageCreatorService;
+        $this->fetchInformationEntity = $fetchInformationEntity;
+        $this->salonRepository = $salonRepository;
     }
 
     #[Route('/', name: 'post_all', methods: ['GET'])]
@@ -65,19 +72,29 @@ class ApiPostController extends AbstractController
     #[Route('/', name: 'post_new', methods: ['POST'])]
     public function newPost(Request $request): Response {
         $json = $this->apiService->getJsonBodyFromRequest($request);
-        if(!isset($json[Post::CREATED_BY]) && isset($json[Post::IMAGE])) {
+        if(!isset($json[Post::IMAGE])) {
             return $this->json('Donnée manquante', 405);
         }
-        $user = $this->userRepository->findOneBy(['id' => $json[Post::CREATED_BY]]);
-        if(isset($user)) {
-            $post = $this->apiService->getJsonBodyFromRequest($request, Post::class);
-            $post->setCreatedBy($user);
-            $this->entityManager->persist($post);
-            $this->entityManager->flush();
-            return $this->apiService->getResponseForApi($post);
-        } else {
-            return $this->json('User non trouvé', 405);
+        if(key_exists(POST::CREATED_BY, $json)) {
+            $user = $this->userRepository->findOneBy(['id' => $json[Post::CREATED_BY]]);
+            if(isset($user)) {
+                $post = $this->apiService->getJsonBodyFromRequest($request, Post::class);
+                $post->setCreatedBy($user);
+                $this->entityManager->persist($post);
+            } else {
+                return $this->json('User non trouvé', 405);
+            }
+        } elseif (key_exists(POST::CREATED_BY_SALON, $json)) {
+            $salon = $this->salonRepository->findOneBy(['id' => $json[Post::CREATED_BY_SALON]]);
+            if(isset($salon)) {
+                $post = $this->apiService->getJsonBodyFromRequest($request, Post::class);
+                $post->setSalon($sa
+            } else {
+                return $this->json('salon non trouvé', 405);
+            }
         }
+        $this->entityManager->flush();
+        return $this->json('', 201);
     }
 
     #[Route('/{id}', name: 'post_replace', methods: ['PUT'])]
@@ -92,12 +109,12 @@ class ApiPostController extends AbstractController
 
         foreach ($allMethods as $key => $method) {
             if($key === Post::IMAGE) {
-                if(gettype($json[$key]) === "integer") {
-                    continue;
-                } else {
+                try {
                     $newImage = $this->imageCreatorService->convertImages64ToEntity($json[$key]);
                     $this->entityManager->persist($newImage);
                     $post->$method($json[$key]);
+                } catch (\Exception $e) {
+                    continue;
                 }
             }
             $post->$method($json[$key]);
@@ -129,35 +146,7 @@ class ApiPostController extends AbstractController
         }
     }
 
-    private function getInformationForPost($post) {
-        $metadataPost = $this->getDoctrine()->getManager()->getMetadataFactory()->getMetadataFor(Post::class);
-        $data = $this->apiService->getSimpleDataFromEntity($post, $metadataPost);
-
-        $imagePost = $post->getImage();
-        if(isset($imagePost)) {
-            $metadataImage = $this->getDoctrine()->getManager()->getMetadataFactory()->getMetadataFor(Image::class);
-            $data[Post::IMAGE] = $this->apiService->getSimpleDataFromEntity($imagePost, $metadataImage);
-        } else {
-            $data[Post::IMAGE] = null;
-        }
-        $createdBy = $post->getCreatedBy();
-        if(isset($createdBy)) {
-            $metadataUser = $this->getDoctrine()->getManager()->getMetadataFactory()->getMetadataFor(User::class);
-            $data[Post::CREATED_BY] = $this->apiService->getSimpleDataFromEntity($createdBy, $metadataUser);
-            unset($data[Post::CREATED_BY]['password']);
-            unset($data[Post::CREATED_BY]['roles']);
-            $imageCreator = $createdBy->getProfileImage();
-            if(isset($imageCreator)) {
-                $metadataImage = $this->getDoctrine()->getManager()->getMetadataFactory()->getMetadataFor(Image::class);
-                $data[Post::CREATED_BY][User::PROFILE_IMAGE] = $this->apiService->getSimpleDataFromEntity($imageCreator, $metadataImage);
-            } else {
-                $data[Post::CREATED_BY][User::PROFILE_IMAGE] = null;
-            }
-
-        } else {
-            $data[Post::CREATED_BY] = null;
-        }
-
-        return $data;
+    public function getInformationForPost($post) {
+        return $this->fetchInformationEntity->getInformationForPost($post);
     }
 }

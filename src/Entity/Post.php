@@ -58,10 +58,15 @@ class Post
 
     /**
      * @ORM\ManyToOne(targetEntity=User::class, inversedBy="posts")
-     * @ORM\JoinColumn(nullable=false)
      */
     private $createdBy;
     const CREATED_BY = "created_by";
+
+    /**
+     * @ORM\ManyToOne(targetEntity=Salon::class, inversedBy="posts")
+     */
+    private $salon;
+    const CREATED_BY_SALON = "created_by_salon";
 
     public function getId(): ?int
     {
@@ -136,6 +141,18 @@ class Post
     public function setCreatedBy(?User $createdBy): self
     {
         $this->createdBy = $createdBy;
+
+        return $this;
+    }
+
+    public function getSalon(): ?Salon
+    {
+        return $this->salon;
+    }
+
+    public function setSalon(?Salon $salon): self
+    {
+        $this->salon = $salon;
 
         return $this;
     }

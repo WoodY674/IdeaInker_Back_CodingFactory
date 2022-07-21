@@ -50,6 +50,9 @@ class ChannelController extends AbstractController {
         $message = $messages->last();
         if($message) {
             $data[Channel::LAST_MESSAGE] = $message->getMessage();
+        } else {
+            $data[Channel::LAST_MESSAGE] = null;
+
         }
 
         return $data;

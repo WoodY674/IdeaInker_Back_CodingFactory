@@ -222,13 +222,13 @@ class ApiConstructorService
         return $listOfMethods;
     }
 
-    public function getSetFunctionFromJsonKey(array $jsonKey, string $classEntity){
+    public function getSetFunctionFromJsonKey(array $jsonKeys, string $classEntity){
         $listOfMethods = [];
         $allMethodInEntity = get_class_methods($classEntity);
-        foreach ($jsonKey as $key => $jsonKey) {
+        foreach ($jsonKeys as $jsonKey) {
             $method = 'set' . ucfirst($this->replaceKeyJsonByProperties($jsonKey));
             if (in_array($method, $allMethodInEntity)) {
-                $listOfMethods[$key] = $method;
+                $listOfMethods[$jsonKey] = $method;
             }
         }
         return $listOfMethods;
@@ -236,7 +236,7 @@ class ApiConstructorService
 
     public function replaceKeyJsonByProperties($keyJson) {
         $partOfStrings = explode("_", $keyJson);
-        if(count($partOfStrings) > 1) {
+        if(count($partOfStrings) < 1) {
             return $keyJson;
         } else {
             $nameProperties = "";

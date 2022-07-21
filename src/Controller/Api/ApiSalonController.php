@@ -9,6 +9,7 @@ use App\Entity\User;
 use App\Repository\SalonRepository;
 use App\Repository\UserRepository;
 use App\Service\ApiService\ApiConstructorService;
+use App\Service\fetchInformationEntity;
 use App\Service\ImageService\ImageCreatorService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -24,19 +25,21 @@ class ApiSalonController extends AbstractController
     private UserRepository $userRepository;
     private ApiConstructorService $apiService;
     private ImageCreatorService $imageCreatorService;
+    private fetchInformationEntity $fetchInformationEntity;
 
     public function __construct(
         SalonRepository $salonRepository,
         UserRepository $userRepository,
         EntityManagerInterface $entityManager,
         ApiConstructorService $apiService,
-        ImageCreatorService $imageCreatorService)
+        ImageCreatorService $imageCreatorService, fetchInformationEntity $fetchInformationEntity)
     {
         $this->salonRepository = $salonRepository;
         $this->entityManager = $entityManager;
         $this->apiService = $apiService;
         $this->userRepository = $userRepository;
         $this->imageCreatorService = $imageCreatorService;
+        $this->fetchInformationEntity = $fetchInformationEntity;
     }
 
     #[Route('/', name: 'salon_all', methods: ['GET'])]
@@ -81,7 +84,7 @@ class ApiSalonController extends AbstractController
         }
     }
 
-    #[Route('/{id}', name: 'salon_replace', methods: ['PUT'])]
+    #[Route('/{id}', name: 'salon_replace', methods: ['PATCH'])]
     public function replaceSalon(Request $request, $id): Response
     {
         $salon = $this->salonRepository->findOneBy(['id' => $id]);
@@ -94,12 +97,12 @@ class ApiSalonController extends AbstractController
 
         foreach ($allMethods as $key => $method) {
             if($key === Salon::SALON_IMAGE) {
-                if(gettype($json[$key]) === "integer") {
-                    continue;
-                } else {
+                try {
                     $newImage = $this->imageCreatorService->convertImages64ToEntity($json[$key]);
                     $this->entityManager->persist($newImage);
-                    $salon->$method($json[$key]);
+                    $salon->$method($newImage);
+                } catch (\Exception $e) {
+                    continue;
                 }
             } elseif($key === Salon::ARTISTS) {
                 foreach ($json[$key] as $artist) {
@@ -113,7 +116,7 @@ class ApiSalonController extends AbstractController
             }
         }
         $this->entityManager->flush();
-        return $this->apiService->getResponseForApi($salon);
+        return $this->json('Salon patching');
     }
     #[Route('/{id}/add/artist/{artistId}', name: 'salon_add_one_artist', methods: ['PATCH'])]
     public function addOneArtist($id, $artistId): Response
@@ -190,11 +193,7 @@ class ApiSalonController extends AbstractController
         }
     }
 
-    #[Route('/{id}', name: 'salon_update', methods: ['PATCH'])]
-    public function updateSalon(): Response
-    {
-        return $this->json('salon salon');
-    }
+
 
     #[Route('/{id}', name: 'salon_delete', methods: ['DELETE'])]
     public function deleteSalon($id): Response
@@ -227,32 +226,24 @@ class ApiSalonController extends AbstractController
             $data[Salon::SALON_IMAGE] = null;
         }
 
-        $manager = $salon->getManager();
-        if(isset($manager)) {
-            $metadataImage = $this->getDoctrine()->getManager()->getMetadataFactory()->getMetadataFor(User::class);
-            $data[Salon::MANAGER] = $this->apiService->getSimpleDataFromEntity($manager, $metadataImage);
-            unset($data[Salon::MANAGER]['password']);
-            unset($data[Salon::MANAGER]['roles']);
-            $imageManager = $manager->getProfileImage();
-            if(isset($imageManager)) {
-                $metadataImage = $this->getDoctrine()->getManager()->getMetadataFactory()->getMetadataFor(Image::class);
-                $data[Salon::MANAGER][User::PROFILE_IMAGE] = $this->apiService->getSimpleDataFromEntity($imageManager, $metadataImage);
-            } else {
-                $data[Salon::MANAGER][User::PROFILE_IMAGE] = null;
+        $posts = $salon->getPosts();
+        if(isset($posts)) {
+            foreach ($posts as $post) {
+                $data[Salon::POSTS][] = $this->fetchInformationEntity->getInformationForPost($post);
             }
 
         } else {
-            $data[Salon::MANAGER] = null;
+            $data[Salon::POSTS] = null;
         }
 
         $artists = $salon->getArtists();
         if(isset($artists)) {
             $metadataImage = $this->getDoctrine()->getManager()->getMetadataFactory()->getMetadataFor(User::class);
             foreach ($artists as $key => $artist) {
-                $data[Salon::ARTISTS][$key] = $this->apiService->getSimpleDataFromEntity($manager, $metadataImage);
+                $data[Salon::ARTISTS][$key] = $this->apiService->getSimpleDataFromEntity($artist, $metadataImage);
                 unset($data[Salon::ARTISTS][$key]['password']);
                 unset($data[Salon::ARTISTS][$key]['roles']);
-                $imageManager = $manager->getProfileImage();
+                $imageManager = $artist->getProfileImage();
                 if(isset($imageManager)) {
                     $metadataImage = $this->getDoctrine()->getManager()->getMetadataFactory()->getMetadataFor(Image::class);
                     $data[Salon::ARTISTS][$key][User::PROFILE_IMAGE] = $this->apiService->getSimpleDataFromEntity($imageManager, $metadataImage);
@@ -276,7 +267,7 @@ class ApiSalonController extends AbstractController
                 $starsAll += $notice->getStars();
             }
             $result = $starsAll / count($notices);
-            $data[Salon::NOTICES]['average'] = $result;
+            $data[Salon::NOTICES]['average'] = number_format((float)$result, 1, '.', '');
         }
 
         return $data;
